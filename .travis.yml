@@ -13,11 +13,11 @@ jobs:
     name: type check
     script:
     - npm run type-check
-  - stage: test
-    name: test & sonar
-    script:
-    - npm test
-    - sonar-scanner -D sonar.login=$SONAR_TOKEN
+  # - stage: test
+    # name: test & sonar
+    # script:
+    # - npm test
+    # - sonar-scanner -D sonar.login=$SONAR_TOKEN
   - stage: test
     name: lint
     script:
