@@ -23,6 +23,7 @@
   "dependencies": {
     "connect-datadog": "0.0.9",
     "express": "^4.17.1",
+    "pg-promise": "^9.3.3",
     "winston": "^3.2.1"
   },
   "devDependencies": {
