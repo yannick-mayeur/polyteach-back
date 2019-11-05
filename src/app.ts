@@ -60,7 +60,7 @@ app.get('/courses', async (req, res) => {
     logger.info(dbres);
     res.send(dbres);
   } catch(e) {
-    logger.error(e)
+    logger.error(e);
   }
 });
 
