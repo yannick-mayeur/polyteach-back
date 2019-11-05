@@ -1,5 +1,5 @@
 {
-  "name": "nodejstemplate",
+  "name": "polyteach-back",
   "version": "1.0.0",
   "description": "",
   "main": "lib/app.js",
@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yannick-mayeur/NodeJsTemplate.git"
+    "url": "git+https://github.com/yannick-mayeur/polyteach-back.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/yannick-mayeur/NodeJsTemplate/issues"
+    "url": "https://github.com/yannick-mayeur/polyteach-back/issues"
   },
-  "homepage": "https://github.com/yannick-mayeur/NodeJsTemplate#readme",
+  "homepage": "https://github.com/yannick-mayeur/polyteach-back#readme",
   "dependencies": {
     "connect-datadog": "0.0.9",
     "express": "^4.17.1",
