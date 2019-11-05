@@ -53,11 +53,15 @@ app.get('/', (req, res) => {
   res.send('This is a test change!');
 });
 
-app.get('/courses', (req, res) => {
+app.get('/courses', async (req, res) => {
   logger.info('A request had been received on /courses');
-  const dbres = db.any('SELECT * FROM course;');
-  logger.info(dbres);
-  res.send(dbres);
+  try {
+    const dbres = await db.any('SELECT * FROM course;');
+    logger.info(dbres);
+    res.send(dbres);
+  } catch(e) {
+    logger.error(e)
+  }
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
