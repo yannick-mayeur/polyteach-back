@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import pgPromise from 'pg-promise';
 import { createLogger, format, transports } from 'winston';
 import connectDatadog from 'connect-datadog';
@@ -46,6 +47,7 @@ if (process.env.NODE_ENV !== 'production') {
   new transports.File({ filename: 'logs/test.log' });
 }
 
+app.use(cors());
 app.use(connectDatadog(dd_options));
 
 app.get('/', (req, res) => {
