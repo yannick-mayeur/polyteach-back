@@ -1,0 +1,35 @@
+language: node_js
+node_js:
+  - 12
+cache:
+  directories:
+  - "$HOME/.sonar/cache"
+addons:
+  sonarcloud:
+    organization: yannick-mayeur
+jobs:
+  include:
+  - stage: test
+    name: type check
+    script:
+    - npm run type-check
+  - stage: test
+    name: test & sonar
+    script:
+    - npm test
+    - sonar-scanner -D sonar.login=$SONAR_TOKEN
+  - stage: test
+    name: lint
+    script:
+    - npm run lint
+  - stage: deploy-prod
+    script: skip
+    deploy:
+      skip_cleanup: true
+      provider: script
+      script: bash .travis/deploy.sh
+      on:
+        branch: master
+
+before_deploy:
+- openssl aes-256-cbc -K $encrypted_5230240a6757_key -iv $encrypted_5230240a6757_iv -in travis.enc -out .travis/travis -d
