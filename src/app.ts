@@ -5,6 +5,7 @@ import connectDatadog from 'connect-datadog';
 
 const dd_options = {
   'response_code': true,
+  'response_time': true,
   'tags': ['app:APP_NAME']
 };
 
