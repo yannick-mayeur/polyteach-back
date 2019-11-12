@@ -9,4 +9,13 @@ module.exports = (router) => {
         res.status(500).send();
       });
   });
+
+  router.post('/courses', async (req, res) => {
+    M.Course.create(req.body)
+      .then(() => res.sendStatus(200))
+      .catch((err) => {
+        res.statusMessage = err;
+        res.sendStatus(500);
+      });
+  });
 };

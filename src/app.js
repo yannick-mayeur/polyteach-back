@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const { createLogger, format, transports } = require('winston');
 const connectDatadog = require('connect-datadog');
 const dotenv = require('dotenv');
@@ -48,6 +49,8 @@ if (process.env.NODE_ENV !== 'production') {
 
 
 app.use(cors());
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 app.use(connectDatadog(dd_options));
 app.use('/', require('./routes'));
 
