@@ -92,7 +92,7 @@ class App extends Component {
                 mySession.on('streamCreated', (event) => {
                     // Subscribe to the Stream to receive it. Second parameter is undefined
                     // so OpenVidu doesn't create an HTML video by its own
-                    var subscriber = mySession.subscribe(event.stream, 'video-container');
+                    var subscriber = mySession.subscribe(event.stream, '');
 
                     var subscribers = this.state.subscribers;
                     subscribers.push(subscriber);
