@@ -72,6 +72,7 @@ class App extends Component {
         }
     }
 
+
     joinSession() {
         // --- 1) Get an OpenVidu object ---
 
@@ -86,15 +87,19 @@ class App extends Component {
             () => {
                 var mySession = this.state.session;
 
+                this.test();
                 // --- 3) Specify the actions when events take place in the session ---
 
                 // On every new Stream received...
                 mySession.on('streamCreated', (event) => {
+                    console.log("hellooooooooFFFFFFFFFF")
                     // Subscribe to the Stream to receive it. Second parameter is undefined
                     // so OpenVidu doesn't create an HTML video by its own
-                    var subscriber = mySession.subscribe(event.stream, '');
+                    var subscriber = mySession.subscribe(event.stream,'' );
+                    console.log("subscriber = "+ subscriber)
 
                     var subscribers = this.state.subscribers;
+                    console.log(" subbbbbbb = " + subscribers)
                     subscribers.push(subscriber);
 
                     // Update the state with the new subscribers
@@ -117,6 +122,7 @@ class App extends Component {
                 this.getToken().then((token) => {
                     // First param is the token got from OpenVidu Server. Second param can be retrieved by every user on event
                     // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
+                    console.log("Voilllllllla quand on fait ça ")
                     mySession
                         .connect(
                             token,
@@ -125,35 +131,73 @@ class App extends Component {
                         .then(() => {
 
                             // --- 5) Get your own camera stream ---
+                            if(this.state.myUserName.startsWith("P") ){
+                                console.log("Hello : "+ this.state.publisher)
+                                // Init a publisher passing undefined as targetElement (we don't want OpenVidu to insert a video
+                                // element: we will manage it on our own) and with the desired properties
+                                let publisher = this.OV.initPublisher(undefined, {
+                                    audioSource: undefined, // The source of audio. If undefined default microphone
+                                    videoSource: undefined, // The source of video. If undefined default webcam
+                                    publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+                                    publishVideo: true, // Whether you want to start publishing with your video enabled or not
+                                    resolution: '1200x1480', // The resolution of your video
+                                    frameRate: 120, // The frame rate of your video
+                                    insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
+                                    mirror: false, // Whether to mirror your local video or not
+                                });
 
-                            // Init a publisher passing undefined as targetElement (we don't want OpenVidu to insert a video
-                            // element: we will manage it on our own) and with the desired properties
-                            let publisher = this.OV.initPublisher(undefined, {
-                                audioSource: undefined, // The source of audio. If undefined default microphone
-                                videoSource: undefined, // The source of video. If undefined default webcam
-                                publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-                                publishVideo: true, // Whether you want to start publishing with your video enabled or not
-                                resolution: '640x480', // The resolution of your video
-                                frameRate: 30, // The frame rate of your video
-                                insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
-                                mirror: false, // Whether to mirror your local video or not
-                            });
+                                // --- 6) Publish your stream ---
 
-                            // --- 6) Publish your stream ---
+                                mySession.publish(publisher);
 
-                            mySession.publish(publisher);
-
-                            // Set the main video in the page to display our webcam and store our Publisher
-                            this.setState({
-                                mainStreamManager: "publisher",
-                                publisher: publisher,
-                            });
+                                // Set the main video in the page to display our webcam and store our Publisher
+                                this.setState({
+                                    mainStreamManager: "publisher",
+                                    publisher: publisher,
+                                });
+                            }
                         })
                         .catch((error) => {
                             console.log('There was an error connecting to the session:', error.code, error.message);
                         });
                 });
             },
+        );
+    }
+
+    httpPostRequest(url, body, errorMsg, callback) {
+        var http = new XMLHttpRequest();
+        console.log("URL ====>"+ url)
+        http.open('POST', url, true);
+        http.setRequestHeader('Content-type', 'application/json');
+        http.addEventListener('readystatechange', processRequest, false);
+        http.send(JSON.stringify(body));
+
+        function processRequest() {
+            if (http.readyState == 4) {
+                if (http.status == 200) {
+                    try {
+                        callback(JSON.parse(http.responseText));
+                    } catch (e) {
+                        callback();
+                    }
+                } else {
+                    console.warn(errorMsg);
+                    console.warn(http.responseText);
+                }
+            }
+        }
+    }
+
+
+    test(){
+        this.httpPostRequest(
+            'api/test',
+            {arg: "LOL"},
+            'Login WRONG',
+            (response) => {
+                // HTML shows logged-in page ...
+            }
         );
     }
 
@@ -171,11 +215,11 @@ class App extends Component {
         this.OV = null;
         this.setState({
             session: undefined,
-            subscribers: [],
+            subscribers: this.state.subscribers,
             mySessionId: 'Classroom',
             myUserName: 'Student' + Math.floor(Math.random() * 100),
             mainStreamManager: undefined,
-            publisher: undefined
+            publisher: this.state.publisher
         });
     }
 
@@ -236,9 +280,9 @@ class App extends Component {
                             />
                         </div>
 
-                        <div id="video-container" className="col-md-6">
+                        <div id="video-container" className="col-md-12">
                             {this.state.publisher !== undefined ? (
-                                <div className="stream-container col-md-6 col-xs-6" onClick={() => this.handleMainVideoStream(this.state.publisher)}>
+                                <div className="stream-container col-md-12 col-xs-6" onClick={() => this.handleMainVideoStream(this.state.publisher)}>
                                     <UserVideoComponent
                                         streamManager={this.state.publisher} />
                                 </div>
@@ -267,9 +311,11 @@ class App extends Component {
      *   3) The token must be consumed in Session.connect() method
      */
 
+
     getToken() {
         return this.createSession(this.state.mySessionId).then((sessionId) => this.createToken(sessionId));
     }
+
 
     createSession(sessionId) {
         return new Promise((resolve, reject) => {
