@@ -19,7 +19,7 @@ const Course = {
       .then(res => res)
       .catch(e => {
         console.log(e.stack);
-        throw new Error('error course create'):
+        throw new Error('error course create');
       });
   }
 };
