@@ -10,10 +10,6 @@ addons:
 jobs:
   include:
   - stage: test
-    name: type check
-    script:
-    - npm run type-check
-  - stage: test
     name: lint
     script:
     - npm run lint
