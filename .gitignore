@@ -2,3 +2,4 @@ node_modules/
 lib/
 .travis/travis
 .travis/travis.pub
+.env
