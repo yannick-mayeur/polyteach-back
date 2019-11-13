@@ -1,9 +1,9 @@
 module.exports = class Course {
   constructor(idCourse, nameCourse, descriptionCourse, pictureCourse) {
-    this.id = idCourse;
-    this.name = nameCourse;
-    this.description = descriptionCourse;
-    this.picture = pictureCourse;
+    this.idCourse = idCourse;
+    this.nameCourse = nameCourse;
+    this.descriptionCourse = descriptionCourse;
+    this.pictureCourse = pictureCourse;
   }
 
   static dbToCourse(obj) {
