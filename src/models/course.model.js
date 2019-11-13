@@ -1,13 +1,15 @@
 const db = require('../db');
 const P = require('../prototypes');
+const logger = require('../helpers/logger');
 
 const Course = {
   async getAll() {
+    logger.info('Course.getAll called');
     const query = 'SELECT * FROM course;';
     return db.query(query, [])
       .then(({ rows }) => P.Course.dbToCourses(rows))
-      .catch((err) => {
-        console.log(err);
+      .catch((e) => {
+        logger.error('Course.getAll: ' + e.stack);
         throw new Error('error course getAll');
       });
   },
@@ -18,7 +20,7 @@ const Course = {
     return db.query(text, values)
       .then(res => res)
       .catch(e => {
-        console.log(e.stack);
+        logger.error('Course.create(' + obj + '): ' + e.stack);
         throw new Error('error course create');
       });
   }
