@@ -1,7 +1,8 @@
-# Nodejs tempate application
+# Polyteach-back
 
-# Steps to use
+## Steps to use
 
-* Add `SONAR_TOKEN` var to travis-ci
-* Change name from NodeJsTemplate to new name
-* profit
+```
+$ docker-compose up
+$ cat dump.sql | docker exec -i polyteach-back_db_1 psql -U admin -d polyteach-db
+```
