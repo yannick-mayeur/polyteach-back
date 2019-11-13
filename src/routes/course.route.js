@@ -16,10 +16,10 @@ module.exports = (router) => {
   router.post('/courses', async (req, res) => {
     logger.info('received request: POST /courses\nbody: ' + req.body);
     M.Course.create(req.body)
-      .then(() => res.sendStatus(200))
-      .catch((e) => {
-        res.statusMessage = e;
-        logger.error('POST /courses failed with: ' + e.stack);
+      .then((course) => res.status(200).send(course))
+      .catch((err) => {
+        logger.error('POST failed with body: ' + req.body);
+        res.statusMessage = err;
         res.sendStatus(500);
       });
   });

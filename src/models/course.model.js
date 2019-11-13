@@ -1,6 +1,7 @@
 const db = require('../db');
 const P = require('../prototypes');
 const logger = require('../helpers/logger');
+const Video = require('./video.model');
 
 const Course = {
   async getAll() {
@@ -15,14 +16,18 @@ const Course = {
   },
 
   async create(obj) {
-    const text = 'INSERT INTO course VALUES(DEFAULT, $1, $2, $3)';
+    const text = 'INSERT INTO course VALUES(DEFAULT, $1, $2, $3) RETURNING *;';
     const values = [obj.name, obj.description, obj.picture];
-    return db.query(text, values)
-      .then(res => res)
-      .catch(e => {
-        logger.error('Course.create(' + obj + '): ' + e.stack);
-        throw new Error('error course create');
+    try {
+      const resCourse = await db.query(text,values);
+      obj.videos.forEach(async video => {
+        await Video.create({ title: video.title, fk_course: resCourse.rows[0].idcourse });
       });
+      return resCourse.rows[0];
+    } catch(e) {
+      logger.error('Course.create(' + obj + '): ' + e.stack);
+      throw new Error('error in course.model.create');
+    }
   }
 };
 
