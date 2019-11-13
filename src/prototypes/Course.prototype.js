@@ -7,7 +7,7 @@ module.exports = class Course {
   }
 
   static dbToCourse(obj) {
-    const course = new Course(obj.idCourse, obj.nameCourse, obj.descriptionCourse, obj.pictureCourse);
+    const course = new Course(obj.idcourse, obj.namecourse, obj.descriptioncourse, obj.picturecourse);
     return course;
   }
 
