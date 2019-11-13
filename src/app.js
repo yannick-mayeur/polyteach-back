@@ -3,7 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const connectDatadog = require('connect-datadog');
 const dotenv = require('dotenv');
-const logger = require('../helpers/logger');
+const logger = require('./helpers/logger');
 
 dotenv.config();
 
