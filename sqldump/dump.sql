@@ -39,6 +39,10 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 -- PostgreSQL database dump complete
 --
 
+$ pg_dump polyteach-db
+pg_dump: [archiver (db)] connection to database "polyteach-db" failed: FATAL:  database "polyteach-db" does not exist
+$ pg_dump polyteach-db
+pg_dump: [archiver (db)] connection to database "polyteach-db" failed: FATAL:  database "polyteach-db" does not exist
 $ pg_dump polyteach_db
 --
 -- PostgreSQL database dump
@@ -103,13 +107,13 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE course (
-    "idCourse" integer NOT NULL,
-    "nameCourse" text,
-    "pictureCourse" text,
-    "descriptionCourse" text,
-    "classCourse" class,
-    "idteacher-Course" integer,
-    "creationDate" date
+    idcourse integer NOT NULL,
+    namecourse text,
+    picturecourse text,
+    descriptioncourse text,
+    classcourse class,
+    "idteacher-course" integer,
+    creationdate date
 );
 
 
@@ -134,7 +138,7 @@ ALTER TABLE "Course_idCourse_seq" OWNER TO postgres;
 -- Name: Course_idCourse_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE "Course_idCourse_seq" OWNED BY course."idCourse";
+ALTER SEQUENCE "Course_idCourse_seq" OWNED BY course.idcourse;
 
 
 --
@@ -142,13 +146,13 @@ ALTER SEQUENCE "Course_idCourse_seq" OWNED BY course."idCourse";
 --
 
 CREATE TABLE student (
-    "idStudent" integer NOT NULL,
-    "emailStudent" text,
-    "passwordStudent" text,
-    "roleStudent" integer,
-    "firstNameStudent" text,
-    "lastNameStudent" text,
-    "classStudent" class
+    idstudent integer NOT NULL,
+    emailstudent text,
+    passwordstudent text,
+    rolestudent integer,
+    firstnamestudent text,
+    lastnamestudent text,
+    "class-student" class
 );
 
 
@@ -173,7 +177,7 @@ ALTER TABLE "Student_idUser_seq" OWNER TO postgres;
 -- Name: Student_idUser_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE "Student_idUser_seq" OWNED BY student."idStudent";
+ALTER SEQUENCE "Student_idUser_seq" OWNED BY student.idstudent;
 
 
 --
@@ -181,12 +185,12 @@ ALTER SEQUENCE "Student_idUser_seq" OWNED BY student."idStudent";
 --
 
 CREATE TABLE teacher (
-    "idTeacher" integer NOT NULL,
-    "emailTeacher" text,
-    "passwordTeacher" text,
-    "roleTeacher" integer,
-    "firstNameTeacher" text,
-    "lastNameTeacher" text
+    idteacher integer NOT NULL,
+    emailteacher text,
+    passwordteacher text,
+    roleteacher integer,
+    firstnameteacher text,
+    lastnameteacher text
 );
 
 
@@ -211,7 +215,7 @@ ALTER TABLE "Teacher_idTeacher_seq" OWNER TO postgres;
 -- Name: Teacher_idTeacher_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE "Teacher_idTeacher_seq" OWNED BY teacher."idTeacher";
+ALTER SEQUENCE "Teacher_idTeacher_seq" OWNED BY teacher.idteacher;
 
 
 --
@@ -219,13 +223,13 @@ ALTER SEQUENCE "Teacher_idTeacher_seq" OWNED BY teacher."idTeacher";
 --
 
 CREATE TABLE video (
-    "idVideo" integer NOT NULL,
-    "idChapter-Video" integer,
-    "titleVideo" text,
-    "hashDrive" text,
-    "hashServer" text,
-    "hashVtt" text,
-    "expiryData" date
+    idvideo integer NOT NULL,
+    "idchapter-video" integer,
+    titlevideo text,
+    hashdrive text,
+    hashserver text,
+    hashvtt text,
+    expirydata date
 );
 
 
@@ -250,16 +254,29 @@ ALTER TABLE "Video_idVideo_seq" OWNER TO postgres;
 -- Name: Video_idVideo_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE "Video_idVideo_seq" OWNED BY video."idVideo";
+ALTER SEQUENCE "Video_idVideo_seq" OWNED BY video.idvideo;
 
+
+--
+-- Name: create; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE "create" (
+    "iduser-create" integer,
+    "idcourse-create" integer,
+    datecreation date
+);
+
+
+ALTER TABLE "create" OWNER TO postgres;
 
 --
 -- Name: possescourse; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE possescourse (
-    "userId-PossesCourse" integer,
-    "courseId-PossesCourse" integer,
+    "userid-possescourse" integer,
+    "courseid-possescourse" integer,
     bookmarked boolean
 );
 
@@ -271,9 +288,9 @@ ALTER TABLE possescourse OWNER TO postgres;
 --
 
 CREATE TABLE ratingcourse (
-    "idUser-RatingCourse" integer,
-    "idCourse-RatingCourse" integer,
-    "value-RatingCourse" integer
+    "iduser-ratingcourse" integer,
+    "idcourse-ratingcourse" integer,
+    "value-ratingcourse" integer
 );
 
 
@@ -284,9 +301,9 @@ ALTER TABLE ratingcourse OWNER TO postgres;
 --
 
 CREATE TABLE ratingvideo (
-    "idUser-RatingVideo" integer,
-    "idVideo-RatingVideo" integer,
-    "value-RatingVideo" integer
+    "iduser-ratingvideo" integer,
+    "idvideo-ratingvideo" integer,
+    "value-ratingvideo" integer
 );
 
 
@@ -297,8 +314,8 @@ ALTER TABLE ratingvideo OWNER TO postgres;
 --
 
 CREATE TABLE see (
-    "idUser-See" integer,
-    "idCourse-See" integer,
+    "iduser-see" integer,
+    "idcourse-see" integer,
     advancement timestamp without time zone
 );
 
@@ -306,38 +323,38 @@ CREATE TABLE see (
 ALTER TABLE see OWNER TO postgres;
 
 --
--- Name: course idCourse; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: course idcourse; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY course ALTER COLUMN "idCourse" SET DEFAULT nextval('"Course_idCourse_seq"'::regclass);
-
-
---
--- Name: student idStudent; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY student ALTER COLUMN "idStudent" SET DEFAULT nextval('"Student_idUser_seq"'::regclass);
+ALTER TABLE ONLY course ALTER COLUMN idcourse SET DEFAULT nextval('"Course_idCourse_seq"'::regclass);
 
 
 --
--- Name: teacher idTeacher; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: student idstudent; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY teacher ALTER COLUMN "idTeacher" SET DEFAULT nextval('"Teacher_idTeacher_seq"'::regclass);
+ALTER TABLE ONLY student ALTER COLUMN idstudent SET DEFAULT nextval('"Student_idUser_seq"'::regclass);
 
 
 --
--- Name: video idVideo; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: teacher idteacher; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY video ALTER COLUMN "idVideo" SET DEFAULT nextval('"Video_idVideo_seq"'::regclass);
+ALTER TABLE ONLY teacher ALTER COLUMN idteacher SET DEFAULT nextval('"Teacher_idTeacher_seq"'::regclass);
+
+
+--
+-- Name: video idvideo; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY video ALTER COLUMN idvideo SET DEFAULT nextval('"Video_idVideo_seq"'::regclass);
 
 
 --
 -- Data for Name: course; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY course ("idCourse", "nameCourse", "pictureCourse", "descriptionCourse", "classCourse", "idteacher-Course", "creationDate") FROM stdin;
+COPY course (idcourse, namecourse, picturecourse, descriptioncourse, classcourse, "idteacher-course", creationdate) FROM stdin;
 3	DevOps	https://static1.squarespace.com/static/559dc415e4b0fcb781ceca92/55b6c5f7e4b08c3f4b9f3f83/5c51551e4ae23755fa90f088/1548890390219/jason-leung-479251-unsplash.jpg?format=2500w	description 3	IG4	\N	\N
 1	AWI	https://img.buzzfeed.com/buzzfeed-static/static/campaign_images/webdr06/2013/7/11/12/35-random-corners-of-the-internet-you-should-visi-1-10632-1373560090-0_big.jpg	description	IG5	\N	\N
 2	WI	https://dyw7ncnq1en5l.cloudfront.net/optim/produits/450/49565/huawei-matebook-13_48d03b2c431078f0__450_400.jpg	description 2	IG3	\N	\N
@@ -345,10 +362,18 @@ COPY course ("idCourse", "nameCourse", "pictureCourse", "descriptionCourse", "cl
 
 
 --
+-- Data for Name: create; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "create" ("iduser-create", "idcourse-create", datecreation) FROM stdin;
+\.
+
+
+--
 -- Data for Name: possescourse; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY possescourse ("userId-PossesCourse", "courseId-PossesCourse", bookmarked) FROM stdin;
+COPY possescourse ("userid-possescourse", "courseid-possescourse", bookmarked) FROM stdin;
 \.
 
 
@@ -356,7 +381,7 @@ COPY possescourse ("userId-PossesCourse", "courseId-PossesCourse", bookmarked) F
 -- Data for Name: ratingcourse; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY ratingcourse ("idUser-RatingCourse", "idCourse-RatingCourse", "value-RatingCourse") FROM stdin;
+COPY ratingcourse ("iduser-ratingcourse", "idcourse-ratingcourse", "value-ratingcourse") FROM stdin;
 \.
 
 
@@ -364,7 +389,7 @@ COPY ratingcourse ("idUser-RatingCourse", "idCourse-RatingCourse", "value-Rating
 -- Data for Name: ratingvideo; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY ratingvideo ("idUser-RatingVideo", "idVideo-RatingVideo", "value-RatingVideo") FROM stdin;
+COPY ratingvideo ("iduser-ratingvideo", "idvideo-ratingvideo", "value-ratingvideo") FROM stdin;
 \.
 
 
@@ -372,7 +397,7 @@ COPY ratingvideo ("idUser-RatingVideo", "idVideo-RatingVideo", "value-RatingVide
 -- Data for Name: see; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY see ("idUser-See", "idCourse-See", advancement) FROM stdin;
+COPY see ("iduser-see", "idcourse-see", advancement) FROM stdin;
 \.
 
 
@@ -380,7 +405,7 @@ COPY see ("idUser-See", "idCourse-See", advancement) FROM stdin;
 -- Data for Name: student; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY student ("idStudent", "emailStudent", "passwordStudent", "roleStudent", "firstNameStudent", "lastNameStudent", "classStudent") FROM stdin;
+COPY student (idstudent, emailstudent, passwordstudent, rolestudent, firstnamestudent, lastnamestudent, "class-student") FROM stdin;
 \.
 
 
@@ -388,7 +413,7 @@ COPY student ("idStudent", "emailStudent", "passwordStudent", "roleStudent", "fi
 -- Data for Name: teacher; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY teacher ("idTeacher", "emailTeacher", "passwordTeacher", "roleTeacher", "firstNameTeacher", "lastNameTeacher") FROM stdin;
+COPY teacher (idteacher, emailteacher, passwordteacher, roleteacher, firstnameteacher, lastnameteacher) FROM stdin;
 \.
 
 
@@ -396,7 +421,7 @@ COPY teacher ("idTeacher", "emailTeacher", "passwordTeacher", "roleTeacher", "fi
 -- Data for Name: video; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY video ("idVideo", "idChapter-Video", "titleVideo", "hashDrive", "hashServer", "hashVtt", "expiryData") FROM stdin;
+COPY video (idvideo, "idchapter-video", titlevideo, hashdrive, hashserver, hashvtt, expirydata) FROM stdin;
 \.
 
 
@@ -433,7 +458,7 @@ SELECT pg_catalog.setval('"Video_idVideo_seq"', 1, false);
 --
 
 ALTER TABLE ONLY course
-    ADD CONSTRAINT "Course_pkey" PRIMARY KEY ("idCourse");
+    ADD CONSTRAINT "Course_pkey" PRIMARY KEY (idcourse);
 
 
 --
@@ -441,7 +466,7 @@ ALTER TABLE ONLY course
 --
 
 ALTER TABLE ONLY student
-    ADD CONSTRAINT "Student_pkey" PRIMARY KEY ("idStudent");
+    ADD CONSTRAINT "Student_pkey" PRIMARY KEY (idstudent);
 
 
 --
@@ -449,7 +474,7 @@ ALTER TABLE ONLY student
 --
 
 ALTER TABLE ONLY teacher
-    ADD CONSTRAINT "Teacher_pkey" PRIMARY KEY ("idTeacher");
+    ADD CONSTRAINT "Teacher_pkey" PRIMARY KEY (idteacher);
 
 
 --
@@ -457,7 +482,14 @@ ALTER TABLE ONLY teacher
 --
 
 ALTER TABLE ONLY video
-    ADD CONSTRAINT "Video_pkey" PRIMARY KEY ("idVideo");
+    ADD CONSTRAINT "Video_pkey" PRIMARY KEY (idvideo);
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
+--
+
+GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --
