@@ -16,7 +16,8 @@ const Course = {
   },
 
   async create(obj) {
-    const text = 'INSERT INTO course VALUES(DEFAULT, $1, $2, $3) RETURNING *;';
+    const text = 'INSERT INTO course("idCourse", "nameCourse", "descriptionCourse", "pictureCourse") \
+                  VALUES(DEFAULT, $1, $2, $3) RETURNING *;';
     const values = [obj.name, obj.description, obj.picture];
     try {
       const resCourse = await db.query(text,values);

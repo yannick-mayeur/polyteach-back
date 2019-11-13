@@ -3,8 +3,8 @@ const db = require('../db');
 
 const Video = {
   async create(obj) {
-    const text = 'INSERT INTO video VALUES(DEFAULT, $1, $2) RETURNING *;';
-    const values = [obj.title, obj.fk_course];
+    const text = 'INSERT INTO video("idVideo", "titleVideo") VALUES(DEFAULT, $1) RETURNING *;';
+    const values = [obj.title]; //, obj.fk_course];
     return db.query(text, values)
       .then(res => res.rows[0])
       .catch(e => {
