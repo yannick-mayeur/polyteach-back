@@ -2,8 +2,6 @@ const M = require('../models');
 
 module.exports = (router) => {
   router.post('/ratingcourse', async (req, res) => {
-    M.RatingCourse.create(req.body)
-      .then((ratingcourse) => res.status(200).send(ratingcourse))
     M.RatingCourse.getRating(req.body)
       .then((row) => checkIfRatingExist(row,req,res))
       .catch((err) => {

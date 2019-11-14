@@ -29,7 +29,7 @@ const RatingCourse = {
   },
 
   async getRating(obj) {
-    const text = 'SELECT * FROM ratingcourse WHERE "iduser-ratingcourse" = $1 AND "idcourse-ratingcourse" = $2;'
+    const text = 'SELECT * FROM ratingcourse WHERE "iduser-ratingcourse" = $1 AND "idcourse-ratingcourse" = $2;';
     const values = [obj.idUserRatingCourse, obj.idCourseRatingCourse];
     try {
       const resultRatingCourse = await db.query(text,values);
