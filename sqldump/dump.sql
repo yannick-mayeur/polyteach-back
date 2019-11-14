@@ -15,52 +15,6 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: DATABASE postgres; Type: COMMENT; Schema: -; Owner: postgres
---
-
-COMMENT ON DATABASE postgres IS 'default administrative connection database';
-
-
---
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
-
---
--- PostgreSQL database dump complete
---
-
-$ pg_dump polyteach-db
-pg_dump: [archiver (db)] connection to database "polyteach-db" failed: FATAL:  database "polyteach-db" does not exist
-$ pg_dump polyteach-db
-pg_dump: [archiver (db)] connection to database "polyteach-db" failed: FATAL:  database "polyteach-db" does not exist
-$ pg_dump polyteach_db
---
--- PostgreSQL database dump
---
-
--- Dumped from database version 10.2 (Debian 10.2-1.pgdg90+1)
--- Dumped by pg_dump version 10.2 (Debian 10.2-1.pgdg90+1)
-
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SET check_function_bodies = false;
-SET client_min_messages = warning;
-SET row_security = off;
-
---
 -- Name: main; Type: SCHEMA; Schema: -; Owner: postgres
 --
 
@@ -429,7 +383,7 @@ COPY video (idvideo, "idchapter-video", titlevideo, hashdrive, hashserver, hashv
 -- Name: Course_idCourse_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"Course_idCourse_seq"', 3, true);
+SELECT pg_catalog.setval('"Course_idCourse_seq"', 4, true);
 
 
 --
