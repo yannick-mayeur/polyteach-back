@@ -3,8 +3,13 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const connectDatadog = require('connect-datadog');
 const dotenv = require('dotenv');
+<<<<<<< HEAD
 const logger = require('./helpers/logger');
 
+=======
+const https = require('https');
+const fs = require('fs');
+>>>>>>> 14639ec...  Add certificate + key, entrypoint to ov-node client sdk
 dotenv.config();
 
 let staging = '';
@@ -20,6 +25,11 @@ const dd_options = {
 const app = express();
 const port = 3000;
 
+// Listen (start app with node server.js)
+const options = {
+  key: fs.readFileSync('openvidukey.pem'),
+  cert: fs.readFileSync('openviducert.pem')
+};
 
 
 app.use(cors());
