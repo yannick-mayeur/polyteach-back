@@ -27,8 +27,8 @@ const port = 3000;
 
 // Listen (start app with node server.js)
 const options = {
-  key: fs.readFileSync('openvidukey.pem'),
-  cert: fs.readFileSync('openviducert.pem')
+  key: fs.readFileSync(__dirname +'/openvidukey.pem','utf-8'),
+  cert: fs.readFileSync(__dirname + '/openviducert.pem','utf-8')
 };
 
 
