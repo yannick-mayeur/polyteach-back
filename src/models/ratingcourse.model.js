@@ -37,7 +37,20 @@ const RatingCourse = {
     }
     catch (e) {
       logger.log('RatingCourse.getRating : ' + e.stack);
-      throw new Error('error in getting à ratingcourse');
+      throw new Error('error in getting a ratingcourse');
+    }
+  },
+
+  async checkPossessionCourse(obj) {
+    const text = 'SELECT * FROM possescourse WHERE "iduser-possescourse" = $1 AND "idcourse-possescourse" = $2;';
+    const values = [obj.idUserRatingCourse, obj.idCourseRatingCourse];
+    try {
+      const resultCheckCourse = await db.query(text,values);
+      return resultCheckCourse.rows;
+    }
+    catch (e) {
+      logger.log('RatingCourse.checkPossessionCoure : ' + e.stack);
+      throw new Error('error in checking rights to rate a course');
     }
   }
 };
