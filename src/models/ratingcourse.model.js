@@ -3,7 +3,7 @@ const logger = require('../helpers/logger');
 
 const RatingCourse = {
   async create(obj) {
-    const text = 'INSERT INTO ratingcourse(`iduser-ratingcourse`, `idcourse-ratingcourse`, `value-ratingcourse`) VALUES($1, $2, $3) RETURNING *;';
+    const text = 'INSERT INTO ratingcourse("iduser-ratingcourse", "idcourse-ratingcourse", "value-ratingcourse") VALUES($1, $2, $3) RETURNING *;';
     const values = [obj.idUserRatingCourse, obj.idCourseRatingCourse, obj.valueRatingCourse];
     try {
       const resultRatingCourse = await db.query(text,values);
