@@ -1,3 +1,15 @@
 {"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-15 17:49:06"}
 {"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-15 17:49:57"}
 {"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-15 17:51:24"}
+{"message":"received request: GET /courses","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-15 17:52:16"}
+{"message":"Course.getAll called","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-15 17:52:16"}
+{"message":"received request: GET /courses","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-15 17:52:19"}
+{"message":"Course.getAll called","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-15 17:52:19"}
+{"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-15 17:52:47"}
+{"message":"received request: GET /courses","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-15 17:52:50"}
+{"message":"Course.getAll called","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-15 17:52:50"}
+{"message":"received request: GET /courses","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-15 17:52:52"}
+{"message":"Course.getAll called","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-15 17:52:52"}
+{"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-15 17:53:49"}
+{"message":"received request: GET /courses","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-15 17:53:55"}
+{"message":"Course.getAll called","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-15 17:53:55"}

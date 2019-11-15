@@ -8,7 +8,7 @@ const Course = {
     logger.info('Course.getAll called');
     const query = 'SELECT * FROM course;';
     return db.query(query, [])
-      .then(({ rows }) => P.Course.dbToCourses(rows))
+      .then(({ rows }) => {return P.Course.dbToCourses(rows)})
       .catch((e) => {
         logger.log('error', 'Course.getAll', e);
         throw new Error('error course getAll');
