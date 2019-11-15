@@ -112,6 +112,12 @@ const login = {
                 throw new Error('error login.model signupTeacher');
             });
     },
+    async isTokenValid(token) {
+        jwt.verify(token, "secret", (err, decoded) => {
+            console.log(err)
+            return err == undefined
+        })
+    }
 };
 
 generateToken = (id) => {

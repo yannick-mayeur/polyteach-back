@@ -41,4 +41,14 @@ module.exports = (router) => {
             res.status(401).send()
         }
     });
+
+    router.get('/login/isTokenValid ', async (req, res) => {
+        M.Login.isTokenValid(req.body.token).then( (res) => {
+            res.status(200).send({isValid: bool});
+        })
+        .catch( err => {
+            res.statusMessage = err;
+            res.status(500).send();
+        });
+    })
 }
