@@ -3,3 +3,4 @@ lib/
 .travis/travis
 .travis/travis.pub
 .env
+src/.env
