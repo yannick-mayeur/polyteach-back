@@ -11,7 +11,7 @@ const logger = createLogger({
     format.splat(),
     format.json()
   ),
-  defaultMeta: { service: 'APP_NAME' },
+  defaultMeta: { service: 'POLYTEACH-BACK' },
   transports: [
     new transports.File({ filename: 'logs/test.log' })
   ]
