@@ -9,7 +9,7 @@ dotenv.config();
 
 const dd_options = {
   'response_code': true,
-  'tags': ['app:APP_NAME']
+  'tags': ['app:POLYTEACH-BACK']
 };
 
 
