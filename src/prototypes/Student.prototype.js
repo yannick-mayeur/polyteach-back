@@ -1,8 +1,7 @@
 module.exports = class Student {
-    constructor(idStudent, emailStudent, passwordStudent, roleStudent, firstNameStudent, lastNameStudent, classStudent) {
+    constructor(idStudent, emailStudent, roleStudent, firstNameStudent, lastNameStudent, classStudent) {
       this.id = idStudent;
       this.email = emailStudent;
-      this.password = passwordStudent;
       this.role = roleStudent;
       this.firstName = firstNameStudent;
       this.lastName = lastNameStudent;
@@ -10,7 +9,7 @@ module.exports = class Student {
     }
   
     static dbToStudent(obj) {
-      const course = new Student(obj.idStudent, obj.emailStudent, obj.passwordStudent, obj.roleStudent, obj.firstNameStudent, obj.lastNameStudent, obj.classStudent);
+      const course = new Student(obj.idStudent, obj.emailStudent, obj.roleStudent, obj.firstNameStudent, obj.lastNameStudent, obj.classStudent);
       return course;
     }
   

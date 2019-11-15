@@ -14,6 +14,12 @@ module.exports = (router) => {
 
     router.post('/signup', async (req, res) => {
         const data = req.body;
+        const isEmailAlreadyUsed = await M.Login.isEmailAlreadyUsed(data.email)
+        if (isEmailAlreadyUsed) {
+            res.statusMessage = "This email is already used."
+            res.status(401).send()
+        }
+
         if (data.email.endsWith('etu.umontpellier.fr')) {
             M.Login.signupStudent(data.email, data.password, data.firstname, data.lastname, data.class).then((data) => {
                 res.status(200).send(data)
