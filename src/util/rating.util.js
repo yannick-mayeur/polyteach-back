@@ -2,6 +2,16 @@ const M = require('../models');
 const logger = require('../helpers/logger');
 
 const ratingUtil = {
+  /**
+   *
+   * @param rows        The result of our query on the "possescourse" (course) or "see" (video) table to know if a user
+   *                    has the right to rate a course (if he has access to it)
+   * @param idUser      The user ID
+   * @param idObject    The video or course ID
+   * @param valueRating The rating
+   * @param res         The res given by the POST request
+   * @param type        The type of the rated object (either a course or a video)
+   */
   checkRightToRate: function(rows, idUser, idObject, valueRating, res, type) {
     if(rows.length === 0)
     {
