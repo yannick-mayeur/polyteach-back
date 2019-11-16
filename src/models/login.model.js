@@ -108,8 +108,7 @@ const login = {
       });
   },
   async isTokenValid(token) {
-    jwt.verify(token, 'secret', (err) => {
-      console.log(err);
+    return jwt.verify(token, 'secret', (err) => {
       return err == undefined;
     });
   },
