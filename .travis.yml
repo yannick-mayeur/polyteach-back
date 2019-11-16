@@ -16,11 +16,16 @@ jobs:
   - stage: deploy-prod
     script: skip
     deploy:
-      skip_cleanup: true
-      provider: script
-      script: bash .travis/deploy.sh
-      on:
-        branch: master
+      - skip_cleanup: true
+        provider: script
+        script: bash .travis/deploy.sh production
+        on:
+          branch: master
+      - skip_cleanup: true
+        provider: script
+        script: bash .travis/deploy.sh staging
+        on:
+          branch: dev
 
 before_deploy:
 - openssl aes-256-cbc -K $encrypted_527885dea4dd_key -iv $encrypted_527885dea4dd_iv
