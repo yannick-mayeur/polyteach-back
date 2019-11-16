@@ -1,48 +1,16 @@
 const M = require('../models');
+const logger = require('../helpers/logger');
+const util = require('../util/ratingcourse.util');
 
 module.exports = (router) => {
   router.post('/ratingcourse', async (req, res) => {
-    M.RatingCourse.checkPossessionCourse(req.body)
-      .then((row) => checkRightToRate(row,req,res))
+    const resultArray = [req.body.idUserRatingCourse, req.body.idCourseRatingCourse, req.body.valueRatingCourse];
+    M.RatingCourse.checkPossessionCourse(resultArray)
+      .then((rows) => util.checkRightToRate(rows,resultArray,res))
       .catch((err) => {
-        res.statusMessage = err;
+        logger.log('POST /ratingcourse failed with : ' + err.stack);
         res.sendStatus(500);
       });
   });
 };
 
-function checkRightToRate(row, req, res) {
-  if(row.length === 0)
-  {
-    res.statusMessage = 'No rights to rate a course ';
-    res.sendStatus(403);
-  }
-  else
-  {
-    M.RatingCourse.getRating(req.body)
-      .then((row) => checkIfRatingExist(row,req,res))
-      .catch((err) => {
-        res.statusMessage = err;
-        res.sendStatus(500);
-      });
-  }
-}
-
-function checkIfRatingExist(row, req, res) {
-  if(row.length === 0)
-  {
-    M.RatingCourse.create(req.body).then((ratingcourse) => res.status(200).send(ratingcourse))
-      .catch((err) => {
-        res.statusMessage = err;
-        res.sendStatus(500);
-      });
-  }
-  else
-  {
-    M.RatingCourse.update(req.body).then((ratingcourse) => res.status(200).send(ratingcourse))
-      .catch((err) => {
-        res.statusMessage = err;
-        res.sendStatus(500);
-      });
-  }
-}

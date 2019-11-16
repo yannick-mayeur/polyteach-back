@@ -2,11 +2,10 @@ const db = require('../db');
 const logger = require('../helpers/logger');
 
 const RatingCourse = {
-  async create(obj) {
+  async create(resultArray) {
     const text = 'INSERT INTO ratingcourse("iduser-ratingcourse", "idcourse-ratingcourse", "value-ratingcourse") VALUES($1, $2, $3) RETURNING *;';
-    const values = [obj.idUserRatingCourse, obj.idCourseRatingCourse, obj.valueRatingCourse];
     try {
-      const resultRatingCourse = await db.query(text,values);
+      const resultRatingCourse = await db.query(text,resultArray);
       return resultRatingCourse.rows[0];
     }
     catch (e) {
@@ -15,11 +14,10 @@ const RatingCourse = {
     }
   },
 
-  async update(obj) {
+  async update(resultArray) {
     const text = 'UPDATE ratingcourse SET "value-ratingcourse" = $3 WHERE "iduser-ratingcourse" = $1 AND "idcourse-ratingcourse" = $2 RETURNING *;';
-    const values = [obj.idUserRatingCourse, obj.idCourseRatingCourse, obj.valueRatingCourse];
     try {
-      const resultRatingCourse = await db.query(text,values);
+      const resultRatingCourse = await db.query(text,resultArray);
       return resultRatingCourse.rows[0];
     }
     catch (e) {
@@ -28,9 +26,9 @@ const RatingCourse = {
     }
   },
 
-  async getRating(obj) {
+  async getRating(resultArray) {
     const text = 'SELECT * FROM ratingcourse WHERE "iduser-ratingcourse" = $1 AND "idcourse-ratingcourse" = $2;';
-    const values = [obj.idUserRatingCourse, obj.idCourseRatingCourse];
+    const values = [resultArray[0], resultArray[1]];
     try {
       const resultRatingCourse = await db.query(text,values);
       return resultRatingCourse.rows;
@@ -41,9 +39,9 @@ const RatingCourse = {
     }
   },
 
-  async checkPossessionCourse(obj) {
+  async checkPossessionCourse(resultArray) {
     const text = 'SELECT * FROM possescourse WHERE "iduser-possescourse" = $1 AND "idcourse-possescourse" = $2;';
-    const values = [obj.idUserRatingCourse, obj.idCourseRatingCourse];
+    const values = [resultArray[0], resultArray[1]];
     try {
       const resultCheckCourse = await db.query(text,values);
       return resultCheckCourse.rows;
