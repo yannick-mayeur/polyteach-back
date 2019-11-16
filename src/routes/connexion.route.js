@@ -42,7 +42,7 @@ module.exports = (router) => {
     }
   });
 
-  router.get('/login/isTokenValid', async (req, res) => {
+  router.post('/login/isTokenValid', async (req, res) => {
     M.Login.isTokenValid(req.body.token).then((bool) => {
       res.status(200).send({ isValid: bool });
     })
