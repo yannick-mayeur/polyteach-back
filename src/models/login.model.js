@@ -108,12 +108,12 @@ const login = {
       });
   },
   async isTokenValid(token) {
-    return jwt.verify(token, 'secret', (err) => {
+    return jwt.verify(token, process.env.SESSION_SECRET="secret", (err) => {
       return err == undefined;
     });
   },
   generateToken(id) {
-  return jwt.sign({ id }, 'secret', {
+  return jwt.sign({ id }, process.env.SESSION_SECRET="secret", {
       expiresIn: 86400, // expires in 24 hours
     });
   },
