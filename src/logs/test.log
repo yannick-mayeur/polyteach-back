@@ -13,3 +13,26 @@
 {"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-15 17:53:49"}
 {"message":"received request: GET /courses","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-15 17:53:55"}
 {"message":"Course.getAll called","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-15 17:53:55"}
+{"message":"received request: GET /courses","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-15 18:04:54"}
+{"message":"Course.getAll called","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-15 18:04:54"}
+{"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 17:22:32"}
+{"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 17:22:33"}
+{"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 17:22:48"}
+{"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 17:23:42"}
+{"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 17:23:48"}
+{"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 17:23:57"}
+{"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 17:24:00"}
+{"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 17:24:17"}
+{"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 17:24:50"}
+{"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 17:30:34"}
+{"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 17:30:44"}
+{"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 17:30:51"}
+{"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 17:31:10"}
+{"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 17:31:24"}
+{"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 17:31:35"}
+{"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 17:32:10"}
+{"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 17:32:28"}
+{"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 17:35:20"}
+{"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 17:35:34"}
+{"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 17:35:40"}
+{"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 17:35:53"}
