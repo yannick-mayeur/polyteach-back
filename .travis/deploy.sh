@@ -11,7 +11,7 @@ if [ "$1" = "production" ]; then
 elif [ "$1" = "staging" ]; then
         git remote add deploy dokku@igpolytech.fr:polyteach-back-staging
         git config --global push.default simple
-        git push deploy master --force
+        git push deploy dev:master --force
 else 
         echo "Bad environment"
 fi
