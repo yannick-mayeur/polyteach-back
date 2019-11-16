@@ -3,23 +3,22 @@ const logger = require('../helpers/logger');
 
 module.exports = (router) => {
   router.get('/courses', async (req, res) => {
-    logger.info('received request: GET /courses');
+    logger.log('info', 'GET /courses', req);
     M.Course.getAll()
       .then((courses) => res.status(200).send(courses))
       .catch((e) => {
         res.statusMessage = e;
-        logger.error('GET /courses failed with: ' + e.stack);
+        logger.log('error', 'GET /courses failed', e);
         res.status(500).send();
       });
   });
 
   router.post('/courses', async (req, res) => {
-    logger.info('received request: POST /courses\nbody: ' + req.body);
+    logger.log('info', 'received request: POST /courses\nbody:', req.body);
     M.Course.create(req.body)
-      .then(() => res.sendStatus(200))
-      .catch((e) => {
-        res.statusMessage = e;
-        logger.error('POST /courses failed with: ' + e.stack);
+      .then((course) => res.status(200).send(course))
+      .catch((err) => {
+        logger.log('error', 'POST /courses failed', err);
         res.sendStatus(500);
       });
   });
