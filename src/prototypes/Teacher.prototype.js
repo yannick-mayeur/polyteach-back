@@ -1,14 +1,14 @@
 module.exports = class Teacher {
-  constructor(idTeacher, emailTeacher, roleTeacher, firstNameTeacher, lastNameTeacher) {
-    this.id = idTeacher;
-    this.email = emailTeacher;
-    this.role = roleTeacher;
-    this.firstName = firstNameTeacher;
-    this.lastName = lastNameTeacher;
+  constructor(idteacher, emailteacher, roleteacher, firstnameteacher, lastnameteacher) {
+    this.id = idteacher;
+    this.email = emailteacher;
+    this.role = roleteacher;
+    this.firstName = firstnameteacher;
+    this.lastName = lastnameteacher;
   }
 
   static dbToTeacher(obj) {
-    const course = new Teacher(obj.idTeacher, obj.emailTeacher, obj.roleTeacher, obj.firstNameTeacher, obj.lastNameTeacher);
+    const course = new Teacher(obj.idteacher, obj.emailteacher, obj.roleteacher, obj.firstnameteacher, obj.lastnameteacher);
     return course;
   }
 
