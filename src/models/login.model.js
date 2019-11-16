@@ -108,16 +108,16 @@ const login = {
       });
   },
   async isTokenValid(token) {
-    return jwt.verify(token, process.env.SESSION_SECRET="secret", (err) => {
+    return jwt.verify(token, process.env.SESSION_SECRET, (err) => {
       return err == undefined;
     });
   },
   generateToken(id) {
-  return jwt.sign({ id }, process.env.SESSION_SECRET="secret", {
+    return jwt.sign({ id }, process.env.SESSION_SECRET, {
       expiresIn: 86400, // expires in 24 hours
     });
   },
-  
+
   encryptPassword(password) {
     var salt = bcrypt.genSaltSync(10);
     var hash = bcrypt.hashSync(password, salt);
