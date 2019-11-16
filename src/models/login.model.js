@@ -113,12 +113,7 @@ const login = {
     });
   },
   generateToken(id) {
-    // TODO secret in session
-    // jwt.sign({ id, role }, process.env.SESSION_SECRET, {
-    //     expiresIn: 86400, // expires in 24 hours
-    // });
-  
-    return jwt.sign({ id }, 'secret', {
+  return jwt.sign({ id }, 'secret', {
       expiresIn: 86400, // expires in 24 hours
     });
   },
