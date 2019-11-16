@@ -3,7 +3,6 @@ const M = require('../models');
 module.exports = (router) => {
   router.post('/login', async (req, res) => {
     M.Login.login(req.body.email, req.body.password).then((data) => {
-      console.log(data);
       res.status(200).send(data);
     }).catch(err => {
       console.log(err);
