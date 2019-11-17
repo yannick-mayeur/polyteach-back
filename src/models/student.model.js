@@ -13,6 +13,6 @@ const Student = {
         throw new Error('error student getAll');
       });
   }
-}
+};
 
 module.exports = Student;
