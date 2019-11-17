@@ -1,4 +1,5 @@
 const M = require('../models');
+const { extractNameFromEmail } = require('../services/umMail.service');
 
 module.exports = (router) => {
   router.post('/login', async (req, res) => {
@@ -19,8 +20,11 @@ module.exports = (router) => {
       res.status(401).send();
     }
 
+    // Extract name and lastname from the email
+    const fullName = extractNameFromEmail(data.email);
+
     if (data.email.endsWith('etu.umontpellier.fr')) {
-      M.Login.signupStudent(data.email, data.password, data.firstname, data.lastname, data.class).then((data) => {
+      M.Login.signupStudent(data.email, data.password, fullName.firstname, fullName.lastname, data.class).then((data) => {
         res.status(200).send(data);
       }).catch(err => {
         console.log(err);
@@ -28,7 +32,7 @@ module.exports = (router) => {
         res.status(500).send();
       });
     } else if (data.email.endsWith('umontpellier.fr')) {
-      M.Login.signupTeacher(data.email, data.password, '', '').then((data) => {
+      M.Login.signupTeacher(data.email, data.password, fullName.firstname, fullName.lastname).then((data) => {
         res.status(200).send(data);
       }).catch(err => {
         console.log(err);
