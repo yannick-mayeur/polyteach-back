@@ -4,7 +4,8 @@ const M = require('../models');
 // Environment variable: URL where our OpenVidu server is listening
 const OPENVIDU_URL = 'localhost:4443';
 // Environment variable: secret shared with our OpenVidu server
-var OPENVIDU_SECRET = 'MY_SECRET';
+const OPENVIDU_SECRET = 'MY_SECRET';
+const OV= new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
 
 module.exports = (router) => {
 
@@ -12,7 +13,7 @@ module.exports = (router) => {
     console.log(req.body.nameCourse);
     let sessionName = req.body.nameCourse;
     let role = "PUBLISHER";
-    
+    const OV= new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
     const tokenOptions = {role:this.role};
 
     // Entrypoint to OpenVidu Node Client SDK
@@ -32,5 +33,16 @@ module.exports = (router) => {
         console.error(error);
     });})
     
+  });
+
+  router.post('/api/live/startRecording', async (req, res) => {
+    
+    let recordParameters = req.body.properties;
+
+    console.log("Starting recording | {sessionId}=" + sessionId);
+    
+    OV.startRecording(recordParameters)
+        .then(recording => res.status(200).send(recording))
+        .catch(error => res.status(400).send(error.message));
   });
 }

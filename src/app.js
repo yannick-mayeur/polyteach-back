@@ -3,13 +3,10 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const connectDatadog = require('connect-datadog');
 const dotenv = require('dotenv');
-<<<<<<< HEAD
 const logger = require('./helpers/logger');
 
-=======
 const https = require('https');
 const fs = require('fs');
->>>>>>> 14639ec...  Add certificate + key, entrypoint to ov-node client sdk
 dotenv.config();
 
 let staging = '';
@@ -21,6 +18,9 @@ const dd_options = {
   'response_code': true,
   'tags': [`app:POLYTEACH-BACK${staging}`]
 };
+
+// For demo purposes we ignore self-signed certificate
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 
 const app = express();
 const port = 3000;
