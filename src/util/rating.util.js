@@ -11,8 +11,9 @@ const ratingUtil = {
    * @param valueRating The rating
    * @param res         The res given by the POST request
    * @param type        The type of the rated object (either a course or a video)
+   * @param request     The type of the request (either POST for a creation or PUT for an update)
    */
-  checkRightToRate: function(rows, idUser, idObject, valueRating, res, type) {
+  checkRightToRate: function(rows, idUser, idObject, valueRating, res, type, request) {
     if(rows.length === 0)
     {
       res.statusMessage = 'No rights to rate';
@@ -23,18 +24,37 @@ const ratingUtil = {
       if(type === 'course')
       {
         M.RatingCourse.getRating(idUser,idObject)
-          .then((rows) => checkIfRatingExist(rows,idUser,idObject,valueRating,res,type))
+          .then((rows) => {
+            if(request === 'post')
+            {
+              createRating(rows,idUser,idObject,valueRating,res,type);
+            }
+            else if (request === 'put')
+            {
+              updateRating(rows,idUser,idObject,valueRating,res,type);
+            }
+          })
           .catch((err) => {
-            logger.log('POST getRating failed with : ' +err.stack);
+            logger.log('POST getRating course failed with : ' +err.stack);
             res.sendStatus(500);
           });
       }
       else if(type === 'video')
       {
         M.RatingVideo.getRating(idUser,idObject)
-          .then((rows) => checkIfRatingExist(rows,idUser,idObject,valueRating,res,type))
+          .then((rows) =>
+          {
+            if(request === 'post')
+            {
+              createRating(rows,idUser,idObject,valueRating,res,type);
+            }
+            else if (request === 'put')
+            {
+              updateRating(rows,idUser,idObject,valueRating,res,type);
+            }
+          })
           .catch((err) => {
-            logger.log('POST getSee failed with : ' +err.stack);
+            logger.log('POST getRating video failed with : ' +err.stack);
             res.sendStatus(500);
           });
       }
@@ -42,7 +62,7 @@ const ratingUtil = {
   }
 };
 
-function checkIfRatingExist(rows, idUser, idObject, valueRating, res, type) {
+function createRating(rows, idUser, idObject, valueRating, res, type) {
   if(rows.length === 0)
   {
     if(type === 'course')
@@ -64,11 +84,19 @@ function checkIfRatingExist(rows, idUser, idObject, valueRating, res, type) {
   }
   else
   {
+    logger.log('POST Rating.create failed : Already existing rating. Cannot create exactly the same');
+    res.sendStatus(400);
+  }
+}
+
+function updateRating(rows, idUser, idObject, valueRating, res, type) {
+  if(rows.length !== 0)
+  {
     if(type === 'course')
     {
-      M.RatingCourse.create(idUser,idObject,valueRating).then((ratingcourse) => res.status(200).send(ratingcourse))
+      M.RatingCourse.update(idUser,idObject,valueRating).then((ratingcourse) => res.status(200).send(ratingcourse))
         .catch((err) => {
-          logger.log('POST RatingVideo.create failed with : ' +err.stack);
+          logger.log('POST RatingCourse.create failed with : ' +err.stack);
           res.sendStatus(500);
         });
     }
@@ -80,6 +108,11 @@ function checkIfRatingExist(rows, idUser, idObject, valueRating, res, type) {
           res.send(500);
         });
     }
+  }
+  else
+  {
+    logger.log('POST Rating.update failed : Rating not found for updating');
+    res.sendStatus(400);
   }
 }
 

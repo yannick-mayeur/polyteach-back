@@ -3,7 +3,7 @@ const logger = require('../helpers/logger');
 
 const See = {
   async getSee(idUser,idVideo) {
-    const text = 'SELECT * FROM see WHERE "iduser-see" = $1 AND "idcourse-see" = $2;';
+    const text = 'SELECT * FROM see WHERE "iduser-see" = $1 AND "idvideo-see" = $2;';
     const values = [idUser, idVideo];
     try {
       const resultCheckCourse = await db.query(text,values);
