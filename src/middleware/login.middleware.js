@@ -10,16 +10,16 @@ const login = async function (req, res, next) {
     const infos = SToken.decryptToken(req.headers.authorization);
     let user = null;
     if (infos.role === 'student') {
-      user = await M.Student.getByName(infos.firstname, infos.lastname);
+      user = await M.Student.getByName(infos.firstname, infos.lastname); 
     } else if (infos.role === 'teacher') {
       user = await M.Teacher.getByName(infos.firstname, infos.lastname);
     }
     
-    req.user = user;
-    req.infos_token = infos;
+    req.user = user;// eslint-disable-line require-atomic-updates
+    req.infos_token = infos;// eslint-disable-line require-atomic-updates
     next();
   } else {
-    res.statusMessage = "Your are not allowed to access this ressource.";
+    res.statusMessage = 'Your are not allowed to access this ressource.';
     res.status(401).send();
   }
 };
