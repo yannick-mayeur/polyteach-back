@@ -5,11 +5,11 @@ const ratingUtil = {
   /**
    *
    * @param rows        The result of our query on the "possescourse" (course) or "see" (video) table to know if a user
-   *                    has the right to rate a course (if he has access to it)
+   *                    has the right to rate a course or a video (if he has access to it)
    * @param idUser      The user ID
    * @param idObject    The video or course ID
    * @param valueRating The rating
-   * @param res         The res given by the POST request
+   * @param res         The res given by the POST or PUT request
    * @param type        The type of the rated object (either a course or a video)
    * @param request     The type of the request (either POST for a creation or PUT for an update)
    */
