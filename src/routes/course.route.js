@@ -3,6 +3,7 @@ const logger = require('../helpers/logger');
 
 module.exports = (router) => {
   router.get('/courses', async (req, res) => {
+
     logger.log('info', 'GET /courses', req);
     M.Course.getAll()
       .then((courses) => res.status(200).send(courses))
@@ -22,4 +23,17 @@ module.exports = (router) => {
         res.sendStatus(500);
       });
   });
+
+  router.get('/courses/getAllByClass', async (req, res) => {
+    // ONLY  FOR TEST
+    req.body.userid = 1
+    M.Course.getAllByClass(req.body.userid).then((coursesByClass) => {
+      res.status(200).send(coursesByClass);
+    })
+      .catch(err => {
+        res.statusMessage = err;
+        res.status(500).send();
+      });
+  });
+
 };
