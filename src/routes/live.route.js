@@ -10,42 +10,48 @@ const OV= new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
 module.exports = (router) => {
 
   router.post('/api/live', async (req, res) => {
-    console.log(req.body.nameCourse);
+
     let sessionName = req.body.nameCourse;
     let role = "PUBLISHER";
-    const OV= new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
     const tokenOptions = {role:this.role};
 
     // Entrypoint to OpenVidu Node Client SDK
-    console.log("OV.urlOpenViduServer" + OV.urlOpenViduServer)
-
      OV.createSession().then(session => {
-      console.log("session returned  ::"+ session);
-      session.generateToken(tokenOptions).then(token => {
-        console.log("token returned  ::"+ token);
-        res.status(200).send(token);
+        console.log("session returned  ::"+ session);
+        session.generateToken(tokenOptions).then(token => {
+          console.log("token returned  ::"+ token);
+          res.status(200).send(token);
     })
-    .catch(error => {
-        console.error(error);
-      
-    })
-    .catch(error => {
-        console.error(error);
+      .catch(error => {
+          console.error(error);
+      })
+  .catch(error => {
+       console.error(error);
     });})
     
   });
 
   router.post('/api/live/startRecording', async (req, res) => {
-
-// Retrieve params from POST body
-    
-    let sessionId = req.body.session;
-    let sessionName = req.body.name;
+  
+    let sessionId = req.body.sessionId;
+    let videoName = req.body.sessionName;
 
     console.log("Starting recording | {sessionId}=" + sessionId);
     
-    OV.startRecording(sessionId, sessionName)
-        .then(recording => res.status(200).send(recording))
+    OV.startRecording(sessionId, videoName)
+        .then(recording => res.status(200).send(recording.id))
         .catch(error => res.status(400).send(error.message));
   });
+
+  router.post('/api/live/stopRecording', async (req, res) => {
+
+    let recordingId = req.body.recordId;
+   
+    console.log("Stopping recording | {recordingId}=" + recordingId);
+
+    OV.stopRecording(recordingId)
+        .then(recording => res.status(200).send(recording.status))
+        .catch(error => res.status(400).send(error.message));
+     
+     });
 }
