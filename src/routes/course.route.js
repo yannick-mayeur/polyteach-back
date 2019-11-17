@@ -1,6 +1,9 @@
 const M = require('../models');
 const logger = require('../helpers/logger');
 
+// MIDDLEWARE
+const login = require('../middleware/login.middleware');
+
 module.exports = (router) => {
   router.get('/courses', async (req, res) => {
 
@@ -24,10 +27,8 @@ module.exports = (router) => {
       });
   });
 
-  router.get('/courses/getAllByClass', async (req, res) => {
-    // ONLY  FOR TEST
-    req.body.userid = 1
-    M.Course.getAllByClass(req.body.userid).then((coursesByClass) => {
+  router.get('/courses/getAllByClass', login, async (req, res) => {
+    M.Course.getAllByClass(req.user.id).then((coursesByClass) => {
       res.status(200).send(coursesByClass);
     })
       .catch(err => {
@@ -35,5 +36,6 @@ module.exports = (router) => {
         res.status(500).send();
       });
   });
-
 };
+
+
