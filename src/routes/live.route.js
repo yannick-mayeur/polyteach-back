@@ -36,12 +36,15 @@ module.exports = (router) => {
   });
 
   router.post('/api/live/startRecording', async (req, res) => {
+
+// Retrieve params from POST body
     
-    let recordParameters = req.body.properties;
+    let sessionId = req.body.session;
+    let sessionName = req.body.name;
 
     console.log("Starting recording | {sessionId}=" + sessionId);
     
-    OV.startRecording(recordParameters)
+    OV.startRecording(sessionId, sessionName)
         .then(recording => res.status(200).send(recording))
         .catch(error => res.status(400).send(error.message));
   });
