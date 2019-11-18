@@ -20,7 +20,7 @@ const Video = {
   },
   async getVideoByName(videoName) {
     const q = `SELECT * FROM video v WHERE v.titlevideo = $1;`;
-    return db.query(query, [videoName])
+    return db.query(q, [videoName])
       .then(({ rows }) => {return P.Video.dbToVideo(rows[0]);})
       .catch((e) => {
         logger.log('error', 'Video.getVideoByName', e);
