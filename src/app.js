@@ -7,11 +7,15 @@ const logger = require('./helpers/logger');
 
 dotenv.config();
 
+let staging = '';
+if (process.env.NODE_ENV == 'STAGING') {
+  staging = '-STAGING';
+}
+
 const dd_options = {
   'response_code': true,
-  'tags': ['app:POLYTEACH-BACK']
+  'tags': [`app:POLYTEACH-BACK${staging}`]
 };
-
 
 const app = express();
 const port = 3000;

@@ -1,5 +1,10 @@
 const { createLogger, format, transports } = require('winston');
 
+let staging = '';
+if (process.env.NODE_ENV == 'STAGING') {
+  staging = '-STAGING';
+}
+
 // Logger creation
 const logger = createLogger({
   level: 'info',
@@ -11,7 +16,7 @@ const logger = createLogger({
     format.splat(),
     format.json()
   ),
-  defaultMeta: { service: 'POLYTEACH-BACK' },
+  defaultMeta: { service: `POLYTEACH-BACK${staging}` },
   transports: [
     new transports.File({ filename: 'logs/test.log' })
   ]

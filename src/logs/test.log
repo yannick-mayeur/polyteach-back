@@ -7,3 +7,4 @@
 {"message":"Course.getAll called","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 19:58:36"}
 {"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 23:01:09"}
 {"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 23:01:44"}
+{"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 23:50:01"}
