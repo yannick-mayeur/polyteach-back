@@ -17,3 +17,8 @@
 {"message":"A request had been received on /courses","level":"info","service":"APP_NAME","timestamp":"2019-11-12 15:42:41"}
 {"errno":"ENOTFOUND","code":"ENOTFOUND","syscall":"getaddrinfo","hostname":"dokku-postgres-polyteach-db","level":"error","service":"APP_NAME","timestamp":"2019-11-12 15:42:41","message":"getaddrinfo ENOTFOUND dokku-postgres-polyteach-db","stack":"Error: getaddrinfo ENOTFOUND dokku-postgres-polyteach-db\n    at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:60:26)"}
 {"message":"Example app listening on port 3000!","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-16 23:42:09"}
+{"message":"Course.getAll called","level":"info","service":"POLYTEACH-BACK","timestamp":"2019-11-18 15:15:35"}
+{"service":"POLYTEACH-BACK","title":"some video","videoUrl":"url","vttURL":"vttURL","fk_course":1,"level":"info","message":"video.model.create called with:","timestamp":"2019-11-18 15:15:35"}
+{"service":"POLYTEACH-BACK","name":"AWI","description":"pas facile","picture":"None","level":"info","message":"course.model.create returning:","timestamp":"2019-11-18 15:15:35"}
+{"service":"POLYTEACH-BACK","name":"AWI","description":"pas facile","picture":"None","videos":[null,null],"level":"info","message":"course.model.create returning:","timestamp":"2019-11-18 15:15:35"}
+{"service":"POLYTEACH-BACK","title":"some video","videoUrl":"url","vttURL":"vttURL","fk_course":1,"level":"info","message":"video.model.create returning:","timestamp":"2019-11-18 15:15:35"}
