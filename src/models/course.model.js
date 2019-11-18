@@ -91,6 +91,18 @@ const Course = {
         throw new Error('');
       });
   },
+
+  async getAllInfos(idCourse) {
+    const q = ``;
+    return db.query(q, [idCourse])
+    .then(({ rows }) => {
+      return rows;
+    })
+    .catch(err => {
+      console.log(err);
+      throw new Error('');
+    });
+  },
 };
 
 module.exports = Course;

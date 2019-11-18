@@ -36,6 +36,16 @@ module.exports = (router) => {
         res.status(500).send();
       });
   });
+
+  router.get('/courses/getAllInfos', async (req, res) => {
+    M.Course.getAllInfos(req.params.courseId).then( (courseInfos) => {
+      res.status(200).send(courseInfos);
+    })
+    .catch( err => {
+      res.statusMessage = err;
+      res.status(500).send();
+    });
+  })
 };
 
 
