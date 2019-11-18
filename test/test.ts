@@ -1,4 +1,4 @@
 test('test test', () => {
-  const b: boolean = true;
+  const b = true;
   expect(b).toBe(!false);
 });

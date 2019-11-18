@@ -9,7 +9,7 @@ module.exports = class Student {
   }
 
   static dbToStudent(obj) {
-    const course = new Student(obj.idstudent, obj.emailstudent, obj.rolestudent, obj.firstnamestudent, obj.lastnamestudent, obj.classstudent);
+    const course = new Student(obj.idstudent, obj.emailstudent, obj.rolestudent, obj.firstnamestudent, obj.lastnamestudent, obj['class-student']);
     return course;
   }
 
