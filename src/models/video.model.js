@@ -18,13 +18,13 @@ const Video = {
       throw new Error('error video create');
     }
   },
-  async getVideoByName(videoName) {
-    const q = 'SELECT * FROM video v WHERE v.titlevideo = $1;';
-    return db.query(q, [videoName])
+  async getVideoById(idVideo) {
+    const q = 'SELECT * FROM video v WHERE v.idvideo = $1;';
+    return db.query(q, [idVideo])
       .then(({ rows }) => {return P.Video.dbToVideo(rows[0]);})
       .catch((e) => {
-        logger.log('error', 'Video.getVideoByName', e);
-        throw new Error('error video getVideoByName');
+        logger.log('error', 'Video.getVideoById', e);
+        throw new Error('error video getVideoById');
       });
   },
 };

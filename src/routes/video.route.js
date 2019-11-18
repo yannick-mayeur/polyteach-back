@@ -12,8 +12,8 @@ module.exports = (router) => {
       });
   });
 
-  router.get('/video/:videoName', async (req, res) => {
-    M.Video.getVideoByName(req.params.videoName).then((video) => {
+  router.get('/video/:idVideo', async (req, res) => {
+    M.Video.getVideoById(req.params.idVideo).then((video) => {
       res.status(200).send(video);
     })
       .catch(err => {
