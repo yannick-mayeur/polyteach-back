@@ -1,12 +1,14 @@
 module.exports = class Video {
-  constructor(idvideo, titlevideo, fk_course) {
+  constructor(idvideo, titlevideo, hashserver, hashvtt, fk_course) {
     this.id = idvideo;
     this.title = titlevideo;
+    this.videoUrl = hashserver;
+    this.vttUrl = hashvtt;
     this.fk_course = fk_course;
   }
 
   static dbToVideo(obj) {
-    const video = new Video(obj.idvideo, obj.titlevideo);
+    const video = new Video(obj.idvideo, obj.titlevideo, obj.hashserver, obj.hashvtt, obj['idchapter-video']);
     return video;
   }
 
