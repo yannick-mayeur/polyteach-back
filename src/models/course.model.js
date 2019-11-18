@@ -59,7 +59,9 @@ const Course = {
             rows.map(row => {
               if (row.classcourse == actClassName) {
                 // extract the course of the class
-                newClass.courses.push(P.Course.dbToCourse(row));
+                const course = P.Course.dbToCourse(row)
+                course.isBookmarked = row.bookmarked;
+                newClass.courses.push(course);
               }
             });
 
