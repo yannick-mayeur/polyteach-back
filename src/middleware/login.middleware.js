@@ -8,7 +8,7 @@ const login = async function (req, res, next) {
   const token = req.headers.authorization.split(' ')[1];
   
   if (token) {
-    const infos = SToken.decryptToken(req.headers.authorization);
+    const infos = SToken.decryptToken(token);
     let user = null;
     if (infos.role === 'student') {
       user = await M.Student.getByName(infos.firstname, infos.lastname); 
