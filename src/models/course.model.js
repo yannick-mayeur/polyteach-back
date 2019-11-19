@@ -2,6 +2,7 @@ const db = require('../db');
 const P = require('../prototypes');
 const logger = require('../helpers/logger');
 const Video = require('./video.model');
+const Possescourse = require('./possescourse.model');
 
 const Course = {
   async getAll() {
@@ -22,8 +23,10 @@ const Course = {
     try {
       const resCourse = await db.query(text, values);
       let res = resCourse.rows[0];
+
+      // Creation of videos
       if (Array.isArray(obj.videos)) {
-        const resVideo = await Promise.all(obj.videos.map(video => {
+        res.videos = await Promise.all(obj.videos.map(video => {
           return Video.create({
             title: video.titleVideo,
             videoURL: video.videoURL,
@@ -32,8 +35,19 @@ const Course = {
 
           });
         }));
-        res.videos = resVideo;
       }
+
+      // Creation of Possescourse
+      if (Array.isArray(obj.students)) {
+        res.possescourse = await Promise.all(obj.students.map(student => {
+          return Possescourse.create({
+            user: student.id,
+            course: resCourse.rows[0].idcourse,
+            bookmarked: false,
+          });
+        }));
+      }
+
       logger.log('info', 'course.model.create returning:', res);
       return res;
     } catch (e) {
@@ -57,7 +71,7 @@ const Course = {
             // Create a new class to store courses related to this class
             const newClass = { 'name': actClassName, 'courses': [] };
             rows.map(row => {
-              if (row.classcourse == actClassName) {
+              if (row.classcourse === actClassName) {
                 // extract the course of the class
                 newClass.courses.push(P.Course.dbToCourse(row));
               }
@@ -86,7 +100,7 @@ const Course = {
       })
       .catch(err => {
         console.log(err);
-        throw new Error('');
+        throw new Error('Error course.model getClassEnum');
       });
   },
 };

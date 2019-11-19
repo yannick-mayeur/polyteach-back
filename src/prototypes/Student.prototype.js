@@ -9,17 +9,11 @@ module.exports = class Student {
   }
 
   static dbToStudent(obj) {
-    const course = new Student(obj.idstudent, obj.emailstudent, obj.rolestudent, obj.firstnamestudent, obj.lastnamestudent, obj['class-student']);
-    return course;
+    return new Student(obj.idstudent, obj.emailstudent, obj.rolestudent, obj.firstnamestudent, obj.lastnamestudent, obj['class-student']);
   }
 
   static dbToStudents(tabObjs) {
-    let tabStudents = [];
-    tabObjs.forEach(obj => {
-      tabStudents.push(this.dbToStudent(obj));
-    });
-    return tabStudents;
+    return tabObjs.map(_ => this.dbToStudent(_));
   }
-
 };
 

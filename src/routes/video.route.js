@@ -16,10 +16,12 @@ module.exports = (router) => {
   });
 
   router.get('/video/:idVideo', login, async (req, res) => {
+    logger.log('info', 'received request: GET /video/:idVideo\nparams:', req.params);
     M.Video.getVideoById(req.params.idVideo).then((video) => {
       res.status(200).send(video);
     })
       .catch(err => {
+        logger.log('error', 'GET /video/:idVideo failed', err);
         res.statusMessage = err;
         res.status(500).send();
       });

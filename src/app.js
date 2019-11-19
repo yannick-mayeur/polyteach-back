@@ -8,7 +8,7 @@ const logger = require('./helpers/logger');
 dotenv.config();
 
 let staging = '';
-if (process.env.NODE_ENV == 'STAGING') {
+if (process.env.NODE_ENV === 'STAGING') {
   staging = '-STAGING';
 }
 
@@ -23,8 +23,8 @@ const port = 3000;
 
 
 app.use(cors());
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(connectDatadog(dd_options));
 app.use('/', require('./routes'));
 

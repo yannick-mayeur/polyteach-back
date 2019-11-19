@@ -14,6 +14,6 @@ test('should fetch students', () => {
     {id: '1', email: 'foobar@etu.umontpellier.fr'},
     {id: '2', email: 'johndoe@etu.umontpellier.fr'},
   ];
-  pg.query.mockImplementation(() => Promise.resolve(students))
+  pg.query.mockImplementation(() => Promise.resolve(students));
   return Student.getAll().then(data => expect(data).toEqual(res));
 });
