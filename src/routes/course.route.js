@@ -28,8 +28,20 @@ module.exports = (router) => {
   });
 
   router.get('/courses/getAllByClass', login, async (req, res) => {
+    logger.log('info', 'received request: GET /courses/getAllByClass\nbody:', req);
     M.Course.getAllByClass(req.user.id).then((coursesByClass) => {
       res.status(200).send(coursesByClass);
+    })
+      .catch(err => {
+        res.statusMessage = err;
+        res.status(500).send();
+      });
+  });
+
+  router.get('/courses/:idCourse/videos', login, async (req, res) => {
+    logger.log('info', 'received request: GET /courses/:idCourse/videos\nbody:', req.params);
+    M.Video.getAllVideosByCourse(req.params.idCourse).then((videosByCourse) => {
+      res.status(200).send(videosByCourse);
     })
       .catch(err => {
         res.statusMessage = err;
