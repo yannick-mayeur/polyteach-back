@@ -1,4 +1,4 @@
-module.exports = class Possecourse {
+module.exports = class Possescourse {
 
   constructor(userId, courseId, bookmarked) {
     this.user = userId;
@@ -7,7 +7,7 @@ module.exports = class Possecourse {
   }
 
   static dbToPossecourse(obj) {
-    return new Possecourse(obj['userid-possescourse'], obj['courseid-possescourse'], obj.bookmarked);
+    return new Possescourse(obj['userid-possescourse'], obj['courseid-possescourse'], obj.bookmarked);
   }
 
   static dbToPossecourses(objs) {
