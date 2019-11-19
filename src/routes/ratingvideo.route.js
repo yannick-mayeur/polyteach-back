@@ -6,16 +6,15 @@ const util = require('../util/rating.util');
 const login = require('../middleware/login.middleware');
 
 module.exports = (router) => {
-  const type = 'video';
   router.post('/ratingvideo', login, async (req, res) => {
     const request = 'post';
     const idUser = req.user.id;
     const idVideo = req.body.idVideoRatingVideo;
     const valueRating = req.body.valueRatingVideo;
-    M.See.getSee(idUser,idVideo)
-      .then((rows) => util.checkRightToRate(rows,idUser,idVideo,valueRating,res,type,request))
+    M.Video.getCourseById(idVideo)
+      .then((idCourse) => util.checkRightToRateVideo(idCourse,idVideo,idUser,res,valueRating,request))
       .catch((err) => {
-        logger.log('POST /ratingvideo failed with : ' + err.stack);
+        logger.info('POST /ratingvideo failed with : ' + err.stack);
         res.sendStatus(500);
       });
   });
@@ -25,10 +24,10 @@ module.exports = (router) => {
     const idUser = req.user.id;
     const idVideo = req.body.idVideoRatingVideo;
     const valueRating = req.body.valueRatingVideo;
-    M.See.getSee(idUser,idVideo)
-      .then((rows) => util.checkRightToRate(rows,idUser,idVideo,valueRating,res,type,request))
+    M.Video.getCourseById(idVideo)
+      .then((idCourse) => util.checkRightToRateVideo(idCourse,idVideo,idUser,res,valueRating,request))
       .catch((err) => {
-        logger.log('PUT /ratingvideo failed with : ' + err.stack);
+        logger.info('PUT /ratingvideo failed with : ' + err.stack);
         res.sendStatus(500);
       });
   });

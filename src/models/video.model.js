@@ -5,7 +5,7 @@ const P = require('../prototypes');
 const Video = {
   async create(obj) {
     logger.log('info', 'video.model.create called with:', obj);
-    const text = 'INSERT INTO video(idvideo, titlevideo, hashserver, hashvtt, "idchapter-video") \
+    const text = 'INSERT INTO video(idvideo, titlevideo, hashserver, hashvtt, "idcourse-video") \
       VALUES(DEFAULT, $1, $2, $3, $4) RETURNING *;';
     const values = [obj.title, obj.videoURL, obj.vttURL, obj.fk_course];
     try {
@@ -27,8 +27,22 @@ const Video = {
         throw new Error('error video getVideoById');
       });
   },
+  async getCourseById(idVideo) {
+    const text = 'SELECT "idcourse-video" FROM video WHERE idvideo = $1;';
+    try
+    {
+      const result = await db.query(text,[idVideo]);
+      return result.rows[0];
+    }
+    catch (e) {
+      logger.log('Video.getCourseById : ' + e.stack);
+      throw new Error('error in getting a course from a video');
+    }
+
+
+  },
   async getAllVideosByCourse(idCourse) {
-    const q = 'SELECT * FROM video v WHERE v."idchapter-video" = $1;';
+    const q = 'SELECT * FROM video v WHERE v."idcourse-video" = $1;';
     return db.query(q, [idCourse])
       .then(({ rows }) => {return P.Video.dbToVideos(rows);})
       .catch((e) => {

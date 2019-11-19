@@ -64,6 +64,24 @@ const ratingUtil = {
           });
       }
     }
+  },
+
+  checkRightToRateVideo(idCourse, idVideo, idUser, res, valueRating, request)
+  {
+    if(idCourse === null)
+    {
+      res.statusMessage = 'No course found from the video';
+      res.sendStatus(400);
+    }
+    else
+    {
+      M.PossesCourse.checkPossessionCourse(idUser,idCourse['idcourse-video'])
+        .then((rows) => this.checkRightToRate(rows,idUser,idVideo,valueRating,res,'video',request))
+        .catch((err) => {
+          logger.info('checkRighToRateVideo failed with : ' + err.stack);
+          res.sendStatus(500);
+        });
+    }
   }
 };
 
@@ -82,7 +100,7 @@ function createRating(rows, idUser, idObject, valueRating, res, type) {
     {
       M.RatingVideo.create(idUser,idObject,valueRating).then((ratingvideo) => res.status(200).send(ratingvideo))
         .catch((err) => {
-          logger.log('POST RatingVideo.create failed with : ' +err.stack);
+          logger.info('POST RatingVideo.create failed with : ' +err.stack);
           res.sendStatus(500);
         });
     }
