@@ -4,7 +4,7 @@ const logger = require('../helpers/logger');
 const Possescourse = {
   async create(obj) {
     logger.log('info', 'possescourse.model.create called with:', obj);
-    const text = 'INSERT INTO possescourse("userid-possescourse", "courseid-possescourse", bookmarked) \
+    const text = 'INSERT INTO possescourse("iduser-possescourse", "idcourse-possescourse", bookmarked) \
       VALUES($1, $2, $3) RETURNING *;';
     const values = [obj.user, obj.course, obj.bookmarked];
     try {
