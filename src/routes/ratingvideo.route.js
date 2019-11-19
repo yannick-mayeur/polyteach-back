@@ -2,11 +2,14 @@ const M = require('../models');
 const logger = require('../helpers/logger');
 const util = require('../util/rating.util');
 
+// MIDDLEWARE
+const login = require('../middleware/login.middleware');
+
 module.exports = (router) => {
   const type = 'video';
-  router.post('/ratingvideo', async (req, res) => {
+  router.post('/ratingvideo', login, async (req, res) => {
     const request = 'post';
-    const idUser = util.getUserId(req);
+    const idUser = req.user.id;
     const idVideo = req.body.idVideoRatingVideo;
     const valueRating = req.body.valueRatingVideo;
     M.See.getSee(idUser,idVideo)
@@ -17,9 +20,9 @@ module.exports = (router) => {
       });
   });
 
-  router.put('/ratingvideo', async (req, res) => {
+  router.put('/ratingvideo', login, async (req, res) => {
     const request = 'put';
-    const idUser = util.getUserId(req);
+    const idUser = req.user.id;
     const idVideo = req.body.idVideoRatingVideo;
     const valueRating = req.body.valueRatingVideo;
     M.See.getSee(idUser,idVideo)

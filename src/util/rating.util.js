@@ -1,6 +1,5 @@
 const M = require('../models');
 const logger = require('../helpers/logger');
-const SToken = require('../services/token.service');
 
 const ratingUtil = {
   /**
@@ -60,12 +59,6 @@ const ratingUtil = {
           });
       }
     }
-  },
-
-  getUserId: function (req) {
-    const token = req.headers.authorization.split(' ')[1];
-    const infos = SToken.decryptToken(token);
-    return infos.id;
   }
 };
 
