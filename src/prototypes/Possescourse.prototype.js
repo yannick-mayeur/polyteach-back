@@ -7,7 +7,7 @@ module.exports = class Possescourse {
   }
 
   static dbToPossecourse(obj) {
-    return new Possescourse(obj['userid-possescourse'], obj['courseid-possescourse'], obj.bookmarked);
+    return new Possescourse(obj['iduser-possescourse'], obj['idcourse-possescourse'], obj.bookmarked);
   }
 
   static dbToPossecourses(objs) {

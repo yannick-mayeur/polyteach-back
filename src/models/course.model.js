@@ -16,6 +16,18 @@ const Course = {
       });
   },
 
+  async getUserCourses(userId) {
+    logger.info('Course.getUserCourses called', userId);
+    const query = 'SELECT * FROM course C, possescourse P WHERE C.idcourse = P."idcourse-possescourse" AND P."iduser-possescourse" = $1;';
+    const values = [userId];
+    return db.query(query, values)
+      .then(({ rows }) => { return P.Course.dbToCourses(rows); })
+      .catch((e) => {
+        logger.log('error', 'Course.getUserCourses', e);
+        throw new Error('error course getUserCourses');
+      });
+  },
+
   async create(obj) {
     const text = 'INSERT INTO course(idcourse, namecourse, descriptioncourse, picturecourse) \
                   VALUES(DEFAULT, $1, $2, $3) RETURNING *;';
