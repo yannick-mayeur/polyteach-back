@@ -6,7 +6,7 @@ module.exports = (router) => {
   const type = 'video';
   router.post('/ratingvideo', async (req, res) => {
     const request = 'post';
-    const idUser = req.body.idUserRatingVideo;
+    const idUser = util.getUserId(req);
     const idVideo = req.body.idVideoRatingVideo;
     const valueRating = req.body.valueRatingVideo;
     M.See.getSee(idUser,idVideo)
@@ -19,7 +19,7 @@ module.exports = (router) => {
 
   router.put('/ratingvideo', async (req, res) => {
     const request = 'put';
-    const idUser = req.body.idUserRatingVideo;
+    const idUser = util.getUserId(req);
     const idVideo = req.body.idVideoRatingVideo;
     const valueRating = req.body.valueRatingVideo;
     M.See.getSee(idUser,idVideo)

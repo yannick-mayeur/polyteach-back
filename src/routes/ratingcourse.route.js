@@ -6,7 +6,7 @@ module.exports = (router) => {
   const type = 'course';
   router.post('/ratingcourse', async (req, res) => {
     const request = 'post';
-    const idUser = req.body.idUserRatingCourse;
+    const idUser = util.getUserId(req);
     const idCourse = req.body.idCourseRatingCourse;
     const valueRating = req.body.valueRatingCourse;
     M.PossesCourse.checkPossessionCourse(idUser, idCourse)
@@ -19,7 +19,7 @@ module.exports = (router) => {
 
   router.put('/ratingcourse', async (req,res) => {
     const request = 'put';
-    const idUser = req.body.idUserRatingCourse;
+    const idUser = util.getUserId(req);
     const idCourse = req.body.idCourseRatingCourse;
     const valueRating = req.body.valueRatingCourse;
     M.PossesCourse.checkPossessionCourse(idUser, idCourse)
