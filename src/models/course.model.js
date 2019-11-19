@@ -45,13 +45,36 @@ const Course = {
   },
 
   async getUserCourses(userId) {
+    const getAverageRating = this.getAverageRating;
     logger.info('Course.getUserCourses called', userId);
-    const query = 'SELECT * FROM course C, possescourse P WHERE C.idcourse = P."idcourse-possescourse" AND P."iduser-possescourse" = $1;';
+    const query = `SELECT * FROM course C
+    INNER JOIN possescourse P ON C.idcourse = P."idcourse-possescourse"
+    INNER JOIN student S ON S.idstudent = P."iduser-possescourse"
+    LEFT JOIN ratingcourse R ON C.idcourse = R."idcourse-ratingcourse"
+    INNER JOIN teacher T ON T.idteacher = C."idteacher-course"
+    where S.idstudent = $1`;
     const values = [userId];
     return db.query(query, values)
-      .then(({ rows }) => { return P.Course.dbToCourses(rows); })
+      .then(async ({ rows }) => {
+        console.log(rows)
+        const courses = await Promise.all(rows.map(row => {
+          return new Promise(function (resolve, reject) {
+            const course = P.Course.dbToCourse(row);
+            course.teacher = P.Teacher.dbToTeacher(row);
+            course.rating = row["value-ratingcourse"];
+
+            // calcul rating
+            return getAverageRating(course.id).then(rate => {
+              course.averageRating = rate;
+              resolve(course);
+            });
+          });
+        }));
+
+        return courses;
+      })
       .catch((e) => {
-        logger.log('error', 'Course.getUserCourses', e);
+        logger.log('error', 'Course.getUserCourses \n', e);
         throw new Error('error course getUserCourses');
       });
   },
@@ -132,7 +155,7 @@ const Course = {
             });
 
             // Add to result if the student possedes course in this class
-            if(newClass.courses.length > 0) 
+            if (newClass.courses.length > 0)
               classes.push(newClass);
           });
 
@@ -185,6 +208,25 @@ const Course = {
     }else{
       return {message: 'This course doesn\'t exist.', code: 404, success: false};
     }
+  },
+  async getAverageRating(idCourse) {
+    const q = `SELECT * FROM ratingcourse WHERE "idcourse-ratingcourse" = $1`;
+    return db.query(q, [idCourse])
+      .then(({ rows }) => {
+        if (rows.length > 0) {
+          let totalScore = 0
+          rows.map(row => {
+            totalScore += row['value-ratingcourse'];
+          });
+
+          return totalScore / rows.length
+        }
+        return undefined;
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error('Error course.model getAverageRating');
+      });
   },
 };
 
