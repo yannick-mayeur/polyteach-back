@@ -16,6 +16,34 @@ const Course = {
       });
   },
 
+  async getCourse(courseId) {
+    logger.info('Course.getCourse called', courseId);
+    const query = 'SELECT C.idcourse, C.namecourse, T.firstnameteacher, T.lastnameteacher FROM Course C, Teacher T WHERE C."idteacher-course" = T.idteacher AND C.idcourse = $1;';
+    const values = [courseId];
+    let course = undefined;
+    let videos = undefined;
+    try {
+      const res = await db.query(query, values);
+      if (res.rows && res.rows.length == 1) {
+        course = res.rows[0];
+      }
+    } catch(e) {
+      logger.log('error', 'error course.getCourse: could not fetch course', e);
+      throw new Error('Could not fetch course');
+    }
+    try {
+      videos = await Video.getAllVideosByCourse(course.idcourse);
+    } catch(e) {
+      logger.log('error', 'error course.getCourse: could not fetch videos', e);
+      throw new Error('Could not fetch course videos');
+    }
+    return {
+      name: course.namecourse,
+      teacherName: `${course.firstnameteacher} ${course.lastnameteacher}`,
+      videos: videos
+    };
+  },
+
   async getUserCourses(userId) {
     logger.info('Course.getUserCourses called', userId);
     const query = 'SELECT * FROM course C, possescourse P WHERE C.idcourse = P."idcourse-possescourse" AND P."iduser-possescourse" = $1;';

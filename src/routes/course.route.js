@@ -14,8 +14,7 @@ module.exports = (router) => {
         logger.log('error', 'GET /courses failed', e);
         res.status(500).send();
       });
-  });
-
+  }); 
   router.post('/courses', async (req, res) => {
     logger.log('info', 'received request: POST /courses\nbody:', req.body);
     M.Course.create(req.body)
@@ -34,6 +33,18 @@ module.exports = (router) => {
       .catch(err => {
         logger.log('error', 'GET /courses/getAllByClass failed', err);
         res.statusMessage = err;
+        res.status(500).send();
+      });
+  });
+
+  router.get('/courses/:idCourse', async (req, res) => {
+    logger.log('info', 'received request: GET /courses/:idCourse/videos\nparams:', req.params);
+    M.Course.getCourse(req.params.idCourse).then((course) => {
+      res.status(200).send(course);
+    })
+      .catch(err => {
+        logger.log('error', 'GET /courses/:idCourse failed', err);
+        res.statusMessage = 'Could not fetch course';
         res.status(500).send();
       });
   });
