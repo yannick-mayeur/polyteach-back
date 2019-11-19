@@ -1,9 +1,11 @@
+jest.mock('../src/db');
+jest.mock('../src/models/video.model');
+
 const pg = require('../src/db');
 const Course = require('../src/models/course.model');
 const Video = require('../src/models/video.model');
-
-jest.mock('../src/db');
-jest.mock('../src/models/video.model');
+const VideoPrototype = require('../src/prototypes/Video.prototype');
+const {getAllVideosByCourse} = jest.requireActual('../src/models/video.model');
 
 test('should fetch courses', () => {
   const courses = {
@@ -50,4 +52,11 @@ test('should create associated videos', async () => {
   const obj = {name: 'AWI', description: 'pas facile', picture: 'None', videos: [{titleVideo: 'hoho'}, {titleVideo: 'hihi'}]};
   await Course.create(obj)
   return expect(Video.create).toBeCalled();
+});
+
+test('should get video for a specific course', () => {
+  const videos = {idvideo: 2, titlevideo: 'some video', hashserver: 'url', hashvtt: 'vttURL', 'idchapter-video': 1};
+  const result = new VideoPrototype(2, 'some video', 'url', 'vttURL', 1);
+  pg.query.mockImplementation(() => Promise.resolve({rows: [videos]}));
+  getAllVideosByCourse(1).then(data => expect(data).toEqual([result]));
 });
