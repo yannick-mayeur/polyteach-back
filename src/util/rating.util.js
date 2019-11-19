@@ -19,6 +19,11 @@ const ratingUtil = {
       res.statusMessage = 'No rights to rate';
       res.sendStatus(403);
     }
+    else if (valueRating < 1 || valueRating > 5)
+    {
+      res.statusMessage = 'Bad rating value.The rating value has to be between 1 and 5';
+      res.sendStatus(422);
+    }
     else
     {
       if(type === 'course')
