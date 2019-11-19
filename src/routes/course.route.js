@@ -36,6 +36,17 @@ module.exports = (router) => {
         res.status(500).send();
       });
   });
+
+  router.get('/courses/:idCourse/videos', login, async (req, res) => {
+    logger.log('info', 'received request: GET /courses/:idCourse/videos\nbody:', req.params);
+    M.Video.getAllVideosByCourse(req.params.idCourse).then((videosByCourse) => {
+      res.status(200).send(videosByCourse);
+    })
+      .catch(err => {
+        res.statusMessage = err;
+        res.status(500).send();
+      });
+  });
 };
 
 
