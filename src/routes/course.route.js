@@ -72,14 +72,23 @@ module.exports = (router) => {
 
   router.delete('/courses/:idCourse', login, async (req, res) => {
     logger.log('info', 'received request: DELETE /courses/:idCourse\nparams:', req.params);
-    M.Course.deleteCourse(req.params.idCourse).then((courseDeleted) => {
-      res.status(200).send(courseDeleted);
-    })
-      .catch(err => {
-        logger.log('error', 'DELETE /courses/:idCourse failed', err);
-        res.statusMessage = err;
-        res.status(500).send();
-      });
+    //Check if it's a teacher
+    if(req.infos_token.role === 'teacher'){
+      M.Course.deleteCourse(req.params.idCourse, req.user.id).then((courseDeleted) => {
+        if('success' in courseDeleted && !courseDeleted.success)
+          res.status(courseDeleted.code).send(courseDeleted.message);
+        else
+          res.status(200).send(courseDeleted);
+      })
+        .catch(err => {
+          logger.log('error', 'DELETE /courses/:idCourse failed', err);
+          res.statusMessage = err;
+          res.status(500).send();
+        });
+    }else{
+      res.status(403).send({message: 'You are not a teacher.'});
+    }
+
   });
 };
 
