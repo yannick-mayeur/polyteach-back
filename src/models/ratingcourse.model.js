@@ -39,6 +39,19 @@ const RatingCourse = {
       logger.log('RatingCourse.getRating : ' + e.stack);
       throw new Error('error in getting a ratingcourse');
     }
+  },
+
+  async getAvgRating(idCourse) {
+    const text = 'SELECT AVG("value-ratingcourse") FROM ratingcourse WHERE "idcourse-ratingcourse" = $1;';
+    const values = [idCourse];
+    try {
+      const resultAvgRatingCourse = await db.query(text,values);
+      return resultAvgRatingCourse.rows[0];
+    }
+    catch (e) {
+      logger.log('RatingCourse.getAvgRating : ' + e.stack);
+      throw new Error('error in getting the avg rating of a course');
+    }
   }
 };
 

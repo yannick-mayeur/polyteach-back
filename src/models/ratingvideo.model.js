@@ -39,6 +39,19 @@ const RatingVideo = {
       logger.log('RatingVideo.getRating : ' + e.stack);
       throw new Error('error in getting a ratingVideo');
     }
+  },
+
+  async getAvgRating(idVideo) {
+    const text = 'SELECT AVG("value-ratingvideo") FROM ratingvideo WHERE "idvideo-ratingvideo" = $1;';
+    const values = [idVideo];
+    try {
+      const resultAvgRatingVideo = await db.query(text,values);
+      return resultAvgRatingVideo.rows[0];
+    }
+    catch (e) {
+      logger.log('RatingVideo.getAvgRating : ' + e.stack);
+      throw new Error('error in getting the avg rating of a video');
+    }
   }
 };
 
