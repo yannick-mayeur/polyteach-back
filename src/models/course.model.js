@@ -149,16 +149,30 @@ const Course = {
       });
   },
 
-  async deleteCourse(idCourse) {
+  async deleteCourse(idCourse, idTeacher) {
     logger.info('Course.deleteCourse called');
-    const q = 'DELETE FROM course c WHERE c.idcourse = $1 RETURNING *;';
-    return db.query(q, [idCourse])
-      .then(({ rows }) => {return P.Course.dbToCourses(rows);})
-      .catch((err) => {
-        console.log(err);
-        logger.log('error', 'Course.deleteCourse(' +idCourse+'): ' + err);
-        throw new Error('Error course.model deleteCourse');
-      });
+
+    const q = 'SELECT * FROM course WHERE c.idcours = $1';
+    const result = await db.query(q, [idCourse]);
+
+    // We check if the course exists
+    if(result.rows[0] !== undefined){
+      // If it's the good teacher we delete the course
+      if(result.rows[0]['idteacher-course'] === idTeacher) {
+        const q = 'DELETE FROM course c WHERE c.idcourse = $1 RETURNING *;';
+        return db.query(q, [idCourse])
+          .then(({ rows }) => {return P.Course.dbToCourses(rows);})
+          .catch((err) => {
+            console.log(err);
+            logger.log('error', 'Course.deleteCourse(' +idCourse+'): ' + err);
+            throw new Error('Error course.model deleteCourse');
+          });
+      }else{
+        return {message: `This course is not your's.`, code: 403, success: false};
+      }
+    }else{
+      return {message: `This course doesn't exist.`, code: 404, success: false};
+    }
   },
 };
 
