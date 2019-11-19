@@ -155,7 +155,7 @@ const Course = {
     const q = 'SELECT * FROM course WHERE c.idcours = $1';
     const result = await db.query(q, [idCourse]);
 
-    // We check if the course exists
+    // We check if the course existsnpm
     if(result.rows[0] !== undefined){
       // If it's the good teacher we delete the course
       if(result.rows[0]['idteacher-course'] === idTeacher) {
@@ -168,10 +168,10 @@ const Course = {
             throw new Error('Error course.model deleteCourse');
           });
       }else{
-        return {message: `This course is not your's.`, code: 403, success: false};
+        return {message: 'This course is not your\'s.', code: 403, success: false};
       }
     }else{
-      return {message: `This course doesn't exist.`, code: 404, success: false};
+      return {message: 'This course doesn\'t exist.', code: 404, success: false};
     }
   },
 };
