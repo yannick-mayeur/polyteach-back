@@ -57,6 +57,7 @@ const Course = {
   },
 
   async create(obj) {
+    logger.info('Course.create called');
     const text = 'INSERT INTO course(idcourse, namecourse, descriptioncourse, picturecourse) \
                   VALUES(DEFAULT, $1, $2, $3) RETURNING *;';
     const values = [obj.name, obj.description, obj.picture];
@@ -96,6 +97,7 @@ const Course = {
     }
   },
   async getAllByClass(idStudent) {
+    logger.info('Course.getAllByClass called');
     const q = `SELECT * FROM student s, possescourse pc, course c WHERE
     s.idstudent = $1 AND
     s.idstudent = pc."iduser-possescourse" AND
@@ -128,11 +130,13 @@ const Course = {
       })
       .catch(err => {
         console.log(err);
+        logger.log('error', 'Course.getAllByClass(' + idStudent + '): ' + err);
         throw new Error('Error course.model getAllByClass');
       });
   },
 
   async getClassEnum() {
+    logger.info('Course.getClassEnum called');
     const q = 'SELECT unnest(enum_range(NULL::class));';
     return db.query(q, [])
       .then(({ rows }) => {
@@ -140,7 +144,20 @@ const Course = {
       })
       .catch(err => {
         console.log(err);
+        logger.log('error', 'Course.getClassEnum(): ' + err);
         throw new Error('Error course.model getClassEnum');
+      });
+  },
+
+  async deleteCourse(idCourse) {
+    logger.info('Course.deleteCourse called');
+    const q = 'DELETE FROM course c WHERE c.idcourse = $1 RETURNING *;';
+    return db.query(q, [idCourse])
+      .then(({ rows }) => {return P.Course.dbToCourses(rows);})
+      .catch((err) => {
+        console.log(err);
+        logger.log('error', 'Course.deleteCourse(' +idCourse+'): ' + err);
+        throw new Error('Error course.model deleteCourse');
       });
   },
 };
