@@ -27,6 +27,15 @@ const Video = {
         throw new Error('error video getVideoById');
       });
   },
+  async getAllVideosByCourse(idCourse) {
+    const q = 'SELECT * FROM video v WHERE v."idchapter-video" = $1;';
+    return db.query(q, [idCourse])
+      .then(({ rows }) => {return P.Video.dbToVideos(rows);})
+      .catch((e) => {
+        logger.log('error', 'Video.getAllVideosByCourse', e);
+        throw new Error('error video getAllVideosByCourse');
+      });
+  },
 };
 
 module.exports = Video;

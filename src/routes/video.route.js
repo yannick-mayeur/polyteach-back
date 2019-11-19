@@ -1,8 +1,11 @@
 const M = require('../models');
 const logger = require('../helpers/logger');
 
+// MIDDLEWARE
+const login = require('../middleware/login.middleware');
+
 module.exports = (router) => {
-  router.post('/videos', async (req, res) => {
+  router.post('/videos', login, async (req, res) => {
     logger.log('info', 'received request: POST /videos\nbody:', req.body);
     M.Video.create(req.body)
       .then((video) => res.status(200).send(video))
@@ -12,7 +15,7 @@ module.exports = (router) => {
       });
   });
 
-  router.get('/video/:idVideo', async (req, res) => {
+  router.get('/video/:idVideo', login, async (req, res) => {
     M.Video.getVideoById(req.params.idVideo).then((video) => {
       res.status(200).send(video);
     })
