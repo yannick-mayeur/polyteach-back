@@ -7,12 +7,10 @@ module.exports = class Course {
   }
 
   static dbToCourse(obj) {
-    const course = new Course(obj.idcourse, obj.namecourse, obj.descriptioncourse, obj.picturecourse);
-    return course;
+    return new Course(obj.idcourse, obj.namecourse, obj.descriptioncourse, obj.picturecourse);
   }
 
   static dbToCourses(objs) {
     return objs.map(obj => this.dbToCourse(obj));
   }
-
 };

@@ -28,21 +28,24 @@ module.exports = (router) => {
   });
 
   router.get('/courses/getAllByClass', login, async (req, res) => {
+    logger.log('info', 'received request: GET /courses/getAllByClass\nparams:', req.params);
     M.Course.getAllByClass(req.user.id).then((coursesByClass) => {
       res.status(200).send(coursesByClass);
     })
       .catch(err => {
+        logger.log('error', 'GET /courses/getAllByClass failed', err);
         res.statusMessage = err;
         res.status(500).send();
       });
   });
 
   router.get('/courses/:idCourse/videos', login, async (req, res) => {
-    logger.log('info', 'received request: GET /courses/:idCourse/videos\nbody:', req.params);
+    logger.log('info', 'received request: GET /courses/:idCourse/videos\nparams:', req.params);
     M.Video.getAllVideosByCourse(req.params.idCourse).then((videosByCourse) => {
       res.status(200).send(videosByCourse);
     })
       .catch(err => {
+        logger.log('error', 'GET /courses/:idCourse/videos failed', err);
         res.statusMessage = err;
         res.status(500).send();
       });
