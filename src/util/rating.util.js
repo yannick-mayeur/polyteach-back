@@ -84,7 +84,7 @@ function createRating(rows, idUser, idObject, valueRating, res, type) {
   }
   else
   {
-    logger.log('POST Rating.create failed : Already existing rating. Cannot create exactly the same');
+    logger.info('POST Rating.create failed : Already existing rating. Cannot create exactly the same');
     res.sendStatus(400);
   }
 }
