@@ -27,15 +27,15 @@ test('should fetch courses', () => {
   const res = [
     {
       'description': 'Web Applications & Interoperability',
-        'id': 1,
-        'name': 'AWI',
-        'picture': 'https://icon-library.net/images/placeholder-image-icon/placeholder-image-icon-7.jpg',
+      'id': 1,
+      'name': 'AWI',
+      'picture': 'https://icon-library.net/images/placeholder-image-icon/placeholder-image-icon-7.jpg',
     },
     {
       'description': 'description 3',
-        'id': 3,
-        'name': 'DevOps',
-        'picture': 'https://static1.squarespace.com/static/559dc415e4b0fcb781ceca92/55b6c5f7e4b08c3f4b9f3f83/5c51551e4ae23755fa90f088/1548890390219/jason-leung-479251-unsplash.jpg?format=2500w',
+      'id': 3,
+      'name': 'DevOps',
+      'picture': 'https://static1.squarespace.com/static/559dc415e4b0fcb781ceca92/55b6c5f7e4b08c3f4b9f3f83/5c51551e4ae23755fa90f088/1548890390219/jason-leung-479251-unsplash.jpg?format=2500w',
     },
   ];
   pg.query.mockImplementation(() => Promise.resolve(courses))
