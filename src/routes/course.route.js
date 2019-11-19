@@ -5,10 +5,9 @@ const logger = require('../helpers/logger');
 const login = require('../middleware/login.middleware');
 
 module.exports = (router) => {
-  router.get('/courses', async (req, res) => {
-
+  router.get('/courses', login, async (req, res) => {
     logger.log('info', 'GET /courses', req);
-    M.Course.getAll()
+    M.Course.getUserCourses(req.user.id)
       .then((courses) => res.status(200).send(courses))
       .catch((e) => {
         res.statusMessage = e;
