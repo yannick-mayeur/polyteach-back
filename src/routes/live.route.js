@@ -9,6 +9,7 @@ const OV= new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
 
 module.exports = (router) => {
 
+  
   router.post('/api/live', async (req, res) => {
 
     let sessionName = req.body.nameCourse;
@@ -55,12 +56,42 @@ module.exports = (router) => {
      
      });
 
-    router.get('/api/live/sessions/sessionId', async (req, res) => {
+    router.get('/api/live/get-token/:sessionId', async (req, res) => {
 
-      OV.fetch.then(()=>{
-        OV.activeSessions.find(session => session.getSessionId === req.body.sessionId)
-        .then(result => res.status(200).send(result));
-      }).catch(error => res.status(400).send(error.message)); 
+      let sessionId = req.params.sessionId;
+      console.log("notre session ="+sessionId);
+      OV.fetch().then(()=>{
+        const mySession = OV.activeSessions.find(session => {
+          return session.getSessionId() === sessionId
+        })
+                // Role associated to this user
+        const role = "SUBSCRIBER";
+        // Optional data to be passed to other users when this user connects to the video-call
+        // In this case, a JSON with the value we stored in the req.session object on login
+        const serverData = "MATH";
+
+        console.log("Getting a token | {sessionId}={" + sessionId + "}");
+
+        // Build tokenOptions object with the serverData and the role
+        const tokenOptions = {
+            data: serverData,
+            role: role
+        };
+        
+        mySession.generateToken(tokenOptions)
+        .then(token => {
+            console.log("tokenback"+token);
+
+            // Return the token to the client
+            res.status(200).send(token);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+       }).catch(error => {
+        console.log("ERREUR", error)
+        res.status(400).send(error.message)
+      }); 
       
     });
   }
