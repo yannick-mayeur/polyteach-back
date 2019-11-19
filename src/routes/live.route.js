@@ -54,4 +54,13 @@ module.exports = (router) => {
         .catch(error => res.status(400).send(error.message));
      
      });
-}
+
+    router.get('/api/live/sessions/sessionId', async (req, res) => {
+
+      OV.fetch.then(()=>{
+        OV.activeSessions.find(session => session.getSessionId === req.body.sessionId)
+        .then(result => res.status(200).send(result));
+      }).catch(error => res.status(400).send(error.message)); 
+      
+    });
+  }
