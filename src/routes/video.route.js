@@ -26,4 +26,14 @@ module.exports = (router) => {
         res.status(500).send();
       });
   });
+
+  router.get('/video/:idVideo/ratingvideo', login, async (req, res) => {
+    M.RatingVideo.getAvgRating(req.params.idVideo).then((rating) => {
+      res.status(200).send(rating);
+    })
+      .catch(err => {
+        res.statusMessage = err;
+        res.status(500).send();
+      });
+  });
 };

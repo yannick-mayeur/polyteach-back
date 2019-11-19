@@ -49,6 +49,15 @@ module.exports = (router) => {
         res.status(500).send();
       });
   });
+
+  router.get('/courses/:idCourse/ratingcourse', login, async (req,res) => {
+    M.RatingCourse.getAvgRating(req.params.idCourse)
+      .then((result) => res.status(200).send(result))
+      .catch((err) => {
+        logger.log('GET /courses/ratingcourse failed with : ' + err.stack);
+        res.sendStatus(500);
+      });
+  });
 };
 
 
