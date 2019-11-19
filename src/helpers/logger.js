@@ -1,7 +1,7 @@
 const { createLogger, format, transports } = require('winston');
 
 let staging = '';
-if (process.env.NODE_ENV == 'STAGING') {
+if (process.env.NODE_ENV === 'STAGING') {
   staging = '-STAGING';
 }
 

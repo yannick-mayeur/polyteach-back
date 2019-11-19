@@ -8,12 +8,10 @@ module.exports = class Video {
   }
 
   static dbToVideo(obj) {
-    const video = new Video(obj.idvideo, obj.titlevideo, obj.hashserver, obj.hashvtt, obj['idchapter-video']);
-    return video;
+    return new Video(obj.idvideo, obj.titlevideo, obj.hashserver, obj.hashvtt, obj['idchapter-video']);
   }
 
   static dbToVideos(objs) {
     return objs.map(obj => this.dbToVideo(obj));
   }
-
 };
