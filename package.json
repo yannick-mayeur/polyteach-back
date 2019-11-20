@@ -28,6 +28,7 @@
     "express": "^4.17.1",
     "i": "^0.3.6",
     "jsonwebtoken": "^8.5.1",
+    "openvidu-node-client": "^2.11.0",
     "pg": "^7.12.1",
     "winston": "^3.2.1"
   },

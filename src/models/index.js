@@ -7,7 +7,7 @@ const See = require('./see.model');
 const Login = require('./login.model');
 const Student = require('./student.model');
 const Teacher = require('./teacher.model');
-
+const Live = require('./live.model');
 
 module.exports = {
   Course,
@@ -19,4 +19,5 @@ module.exports = {
   Login,
   Student,
   Teacher,
+  Live
 };

@@ -17,10 +17,11 @@ const dd_options = {
   'tags': [`app:POLYTEACH-BACK${staging}`]
 };
 
+// For demo purposes we ignore self-signed certificate
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 const app = express();
 const port = 3000;
-
-
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
