@@ -152,7 +152,7 @@ const Course = {
   async deleteCourse(idCourse, idTeacher) {
     logger.info('Course.deleteCourse called');
 
-    const q = 'SELECT * FROM course WHERE c.idcourse = $1';
+    const q = 'SELECT * FROM course c WHERE c.idcourse = $1';
     const result = await db.query(q, [idCourse]);
 
     // We check if the course existsnpm
