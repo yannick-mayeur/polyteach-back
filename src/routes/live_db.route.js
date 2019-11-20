@@ -5,7 +5,7 @@ module.exports = (router) => {
 
     let sessionId = req.params.sessionId;
     M.Live.getInfos(sessionId)
-      .then((live) => res.status(200).send(live))
+      .then((row) => res.status(200).send(row))
       .catch((err) => {
         res.statusMessage = err;
         res.status(500).send();

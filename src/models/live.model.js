@@ -14,10 +14,10 @@ const Live = {
   },
 
   async getInfos(sessionId) {
-    const query = 'SELECT * FROM live where idsession=$1;';
+    const query = 'SELECT * FROM live where idsession=$1 AND timestartlive IS NOT NULL;';
     return db.query(query, [sessionId])
       .then(({ rows }) => {
-        return rows[0];
+        rows.length>0 ? rows[0] : rows;
       })
       .catch((err) => {
         console.log(err);
