@@ -24,7 +24,7 @@ const Course = {
     let videos = undefined;
     try {
       const res = await db.query(query, values);
-      if (res.rows && res.rows.length == 1) {
+      if (res.rows && res.rows.length === 1) {
         course = res.rows[0];
       }
     } catch(e) {
@@ -53,6 +53,18 @@ const Course = {
       .catch((e) => {
         logger.log('error', 'Course.getUserCourses', e);
         throw new Error('error course getUserCourses');
+      });
+  },
+
+  async getTeacherCourses(teacherId) {
+    logger.info('Course.getTeacherCourses called', teacherId);
+    const query = 'SELECT * FROM course C WHERE C."idteacher-course" = $1;';
+    const values = [teacherId];
+    return db.query(query, values)
+      .then(({ rows }) => { return P.Course.dbToCourses(rows); })
+      .catch((e) => {
+        logger.log('error', 'Course.getTeacherCourses', e);
+        throw new Error('error course getTeacherCourses');
       });
   },
 
