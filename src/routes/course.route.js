@@ -7,13 +7,24 @@ const login = require('../middleware/login.middleware');
 module.exports = (router) => {
   router.get('/courses', login, async (req, res) => {
     logger.log('info', 'GET /courses', req);
-    M.Course.getUserCourses(req.user.id)
-      .then((courses) => res.status(200).send(courses))
-      .catch((e) => {
-        res.statusMessage = e;
-        logger.log('error', 'GET /courses failed', e);
-        res.status(500).send();
-      });
+    //Check if it's a teacher
+    if(req.infos_token.role === 'student') {
+      M.Course.getUserCourses(req.user.id)
+        .then((courses) => res.status(200).send(courses))
+        .catch((e) => {
+          res.statusMessage = e;
+          logger.log('error', 'GET /courses failed', e);
+          res.status(500).send();
+        });
+    }else{
+      M.Course.getTeacherCourses(req.user.id)
+        .then((courses) => res.status(200).send(courses))
+        .catch((e) => {
+          res.statusMessage = e;
+          logger.log('error', 'GET /courses failed', e);
+          res.status(500).send();
+        });
+    }
   }); 
   router.post('/courses', async (req, res) => {
     logger.log('info', 'received request: POST /courses\nbody:', req.body);
