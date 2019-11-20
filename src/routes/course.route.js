@@ -15,14 +15,21 @@ module.exports = (router) => {
         res.status(500).send();
       });
   }); 
-  router.post('/courses', async (req, res) => {
+  router.post('/courses', login, async (req, res) => {
     logger.log('info', 'received request: POST /courses\nbody:', req.body);
-    M.Course.create(req.body)
-      .then((course) => res.status(200).send(course))
-      .catch((err) => {
-        logger.log('error', 'POST /courses failed', err);
-        res.sendStatus(500);
-      });
+    //Check if it's a teacher
+    if(req.infos_token.role === 'teacher'){
+      M.Course.create(req.body)
+        .then((course) => res.status(200).send(course))
+        .catch((err) => {
+          logger.log('error', 'POST /courses failed', err);
+          res.sendStatus(500);
+        });
+    } else {
+      logger.log('warning', 'Not a teacher trying to POST /courses');
+      res.statusMessage = 'You have to be a teacher to create a course.';
+      res.sendStatus(403);
+    }
   });
 
   router.get('/courses/getAllByClass', login, async (req, res) => {
