@@ -5,3 +5,4 @@ lib/
 .env
 src/.env
 src/logs/*.log
+logs/
