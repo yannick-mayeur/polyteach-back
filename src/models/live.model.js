@@ -2,12 +2,7 @@ const db = require('../db');
 
 const Live = {
   async create(obj, nameteacher) {
-    console.log('----------------------------');
-    console.log('create object******');
     const now= ''+Date.now();
-    console.log('date'+now);
-    console.log('value id'+obj.idsession);
-    console.log('----------------------------');
     const text = 'INSERT INTO live VALUES($1, $2, $3, $4, $5, $6,$7) RETURNING *';
     const values = [obj.idsession,obj.namesession,nameteacher,obj.descriptionlive,now,null,obj.idcourselive];
     return db.query(text, values)
@@ -22,7 +17,6 @@ const Live = {
     const query = 'SELECT * FROM live where idsession=$1;';
     return db.query(query, [sessionId])
       .then(({ rows }) => {
-        console.log('sssss  '+rows.length );
         return rows[0];
       })
       .catch((err) => {
@@ -46,7 +40,6 @@ const Live = {
   async updateLiveStatus(sessionId) {
 
     let time_end = ''+Date.now();
-    console.log('log time'+time_end);
     const text = 'UPDATE live SET "timestoplive" = $1 WHERE "idsession" = $2 RETURNING *;';
     const values = [time_end, sessionId];
     try {
