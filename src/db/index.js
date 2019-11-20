@@ -1,14 +1,5 @@
 const { Pool } = require('pg');
-const pool = new Pool(
-  {
-    user: 'anissalamh',
-    host: 'localhost',
-    database: 'polyteach',
-    password: 'Pol8192u',
-    port:'5432'
-
-  }
-);
+const pool = new Pool();
 
 module.exports = {
   query: (text, params) => {

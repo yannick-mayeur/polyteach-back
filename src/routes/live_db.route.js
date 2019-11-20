@@ -26,7 +26,10 @@ module.exports = (router) => {
     });
      /***********  SAVING LIVE   **********/
      router.post('/api/live/save', async (req, res) => {
-        M.Live.create(req.body)
+       console.log("herrreee --------");
+       const nameTeacher="";
+      //  const nameTeacher = req.user.firstname + " " + req.user.lastname;
+        M.Live.create(req.body, nameTeacher)
           .then(() => res.sendStatus(200))
           .catch((err) => {
             res.statusMessage = err;
