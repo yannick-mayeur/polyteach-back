@@ -9,12 +9,12 @@ const OV= new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
 
 module.exports = (router) => {
 
-  
+  /***********  PUBLISH LIVE  **********/
   router.post('/api/live', async (req, res) => {
 
     let sessionName = req.body.nameCourse;
     let role = "PUBLISHER";
-    const tokenOptions = {role:this.role};
+    const tokenOptions = {data: this.sessionName,role:this.role};
 
     // Entrypoint to OpenVidu Node Client SDK
      OV.createSession().then(session => {
@@ -32,6 +32,50 @@ module.exports = (router) => {
     
   });
 
+  /***********  RETRIEVE SUBSCRIBER'S TOKEN  **********/
+  router.get('/api/live/get-token/:sessionId', async (req, res) => {
+
+    let sessionId = req.params.sessionId;
+    
+    OV.fetch().then(()=>{
+      const mySession = OV.activeSessions.find(session => {
+        return session.getSessionId() === sessionId
+      })
+      const serverData = Date.now;
+
+      const tokenOptions = {
+          data: serverData.toString,
+          role: "SUBSCRIBER",
+      };
+
+      mySession.generateToken(tokenOptions)
+      .then(token => {
+          res.status(200).send(token);
+      })
+      .catch(error => {
+          console.error(error);
+      });
+     }).catch(error => {
+      res.status(400).send(error.message)
+    }); 
+    
+  });
+
+
+  /***********  RETRIEVE ACTIVE SESSIONS  **********/
+  router.get('/api/live/lives', async (req, res) => {
+
+    OV.fetch().then(()=>{
+      const allSessions = OV.activeSessions
+      res.status(200).send(allSessions);
+     }).catch(error => {
+      res.status(400).send(error.message)
+    }); 
+    
+  });
+
+
+    /***********  START RECORDING LIVE  **********/
   router.post('/api/live/startRecording', async (req, res) => {
   
     let sessionId = req.body.sessionId;
@@ -44,6 +88,7 @@ module.exports = (router) => {
         .catch(error => res.status(400).send(error.message));
   });
 
+    /***********  STOP RECORDING LIVE  **********/
   router.post('/api/live/stopRecording', async (req, res) => {
 
     let recordingId = req.body.recordId;
@@ -56,42 +101,24 @@ module.exports = (router) => {
      
      });
 
-    router.get('/api/live/get-token/:sessionId', async (req, res) => {
-
-      let sessionId = req.params.sessionId;
-      console.log("notre session ="+sessionId);
-      OV.fetch().then(()=>{
-        const mySession = OV.activeSessions.find(session => {
-          return session.getSessionId() === sessionId
-        })
-                // Role associated to this user
-        const role = "SUBSCRIBER";
-        // Optional data to be passed to other users when this user connects to the video-call
-        // In this case, a JSON with the value we stored in the req.session object on login
-        const serverData = "MATH";
-
-        console.log("Getting a token | {sessionId}={" + sessionId + "}");
-
-        // Build tokenOptions object with the serverData and the role
-        const tokenOptions = {
-            data: serverData,
-            role: role
-        };
-        
-        mySession.generateToken(tokenOptions)
-        .then(token => {
-            console.log("tokenback"+token);
-
-            // Return the token to the client
-            res.status(200).send(token);
-        })
-        .catch(error => {
-            console.error(error);
+    /***********  SAVING LIVE   **********/
+    router.post('/api/live/save', async (req, res) => {
+      M.Live.create(req.body)
+        .then(() => res.sendStatus(200))
+        .catch((err) => {
+          res.statusMessage = err;
+          res.sendStatus(500);
         });
-       }).catch(error => {
-        console.log("ERREUR", error)
-        res.status(400).send(error.message)
-      }); 
-      
+    });
+
+    /***********  LIVE INFORMATION  **********/
+    router.get('api/live/infos', async (req, res) => {
+      let sessionId = req.params.sessionId;
+      M.Live.getInfos(sessionId)
+        .then((live) => res.status(200).send(live))
+        .catch((err) => {
+          res.statusMessage = err;
+          res.status(500).send();
+        });
     });
   }
