@@ -5,8 +5,6 @@ const connectDatadog = require('connect-datadog');
 const dotenv = require('dotenv');
 const logger = require('./helpers/logger');
 
-const https = require('https');
-const fs = require('fs');
 dotenv.config();
 
 let staging = '';
@@ -20,17 +18,10 @@ const dd_options = {
 };
 
 // For demo purposes we ignore self-signed certificate
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 const app = express();
 const port = 3000;
-
-// Listen (start app with node server.js)
-const options = {
-  key: fs.readFileSync(__dirname +'/openvidukey.pem','utf-8'),
-  cert: fs.readFileSync(__dirname + '/openviducert.pem','utf-8')
-};
-
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
