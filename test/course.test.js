@@ -7,6 +7,7 @@ const Course = require('../src/models/course.model');
 const Video = require('../src/models/video.model');
 const Possescourse = require('../src/models/possescourse.model');
 const VideoPrototype = require('../src/prototypes/Video.prototype');
+const CoursePrototype = require('../src/prototypes/Course.prototype');
 const {getAllVideosByCourse} = jest.requireActual('../src/models/video.model');
 
 test('should fetch courses', () => {
@@ -73,15 +74,22 @@ test('should add students to possescourse', async () => {
       'lastName': 'baz',
       'class': 'IG4'
     },
-      {
-        'id': 1,
-        'email': 'foobar@etu.umontpellier.fr',
-        'role': null,
-        'firstName': 'foo',
-        'lastName': 'bar',
-        'class': 'IG3'
-      }]
+    {
+      'id': 1,
+      'email': 'foobar@etu.umontpellier.fr',
+      'role': null,
+      'firstName': 'foo',
+      'lastName': 'bar',
+      'class': 'IG3'
+    }]
   };
   await Course.create(obj);
   return expect(Possescourse.create).toBeCalled();
+});
+
+test('should delete the course', async () => {
+  const obj = {idcourse: 3, namecourse: 'AWI', descriptioncourse: 'pas facile', picturecourse: 'url picture'};
+  const course = new CoursePrototype(3, 'AWI', 'pas facile', 'url picture');
+  pg.query.mockImplementation(() => Promise.resolve({rows: [obj]}));
+  Course.deleteCourse(3).then(data => expect(data).toEqual([course]));
 });
