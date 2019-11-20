@@ -62,6 +62,18 @@ module.exports = (router) => {
     
   });
 
+    /***********  LIVE INFORMATION  **********/
+    router.get('/api/live/infos/:sessionId', async (req, res) => {
+
+      let sessionId = req.params.sessionId;
+      console.log("session params" + sessionId);
+      M.Live.getInfos(sessionId)
+        .then((live) => res.status(200).send(live))
+        .catch((err) => {
+          res.statusMessage = err;
+          res.status(500).send();
+        });
+    });
 
   /***********  RETRIEVE ACTIVE SESSIONS  **********/
   router.get('/api/live/lives', async (req, res) => {
@@ -74,8 +86,7 @@ module.exports = (router) => {
           res.status(500).send();
         });
   });
-
-
+ 
     /***********  START RECORDING LIVE  **********/
   router.post('/api/live/startRecording', async (req, res) => {
   
@@ -113,14 +124,5 @@ module.exports = (router) => {
         });
     });
 
-    /***********  LIVE INFORMATION  **********/
-    router.get('api/live/infos', async (req, res) => {
-      let sessionId = req.params.sessionId;
-      M.Live.getInfos(sessionId)
-        .then((live) => res.status(200).send(live))
-        .catch((err) => {
-          res.statusMessage = err;
-          res.status(500).send();
-        });
-    });
+
   }

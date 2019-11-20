@@ -16,6 +16,7 @@ const Live = {
       const query = 'SELECT * FROM live where idsession=$1;';
       return db.query(query, [sessionId])
         .then(({ rows }) => {
+          console.log("sssss  "+rows.length );
           return rows[0];
         })
         .catch((err) => {
