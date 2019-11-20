@@ -37,6 +37,22 @@ const Live = {
         });
     },
 
+    async updateLiveStatus(sessionId) {
+
+      let time_end = ""+Date.now();
+      console.log("log time"+time_end);
+      const text = 'UPDATE live SET "timestoplive" = $1 WHERE "idsession" = $2 RETURNING *;';
+      const values = [time_end, sessionId];
+      try {
+        const res = await db.query(text,values);
+        return res.rows[0];
+      }
+      catch (e) {
+        logger.log('live_endtime.update: ' + e.stack);
+        throw new Error('error in updating end of live value');
+      }
+    },
+
   };
   
   module.exports = Live;
