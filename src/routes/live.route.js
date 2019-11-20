@@ -14,6 +14,7 @@ module.exports = (router) => {
 
     let sessionName = req.body.nameCourse;
     let role = "PUBLISHER";
+    // data for generate token
     const tokenOptions = {data: this.sessionName,role:this.role};
 
     // Entrypoint to OpenVidu Node Client SDK
@@ -64,14 +65,14 @@ module.exports = (router) => {
 
   /***********  RETRIEVE ACTIVE SESSIONS  **********/
   router.get('/api/live/lives', async (req, res) => {
-
-    OV.fetch().then(()=>{
-      const allSessions = OV.activeSessions
-      res.status(200).send(allSessions);
-     }).catch(error => {
-      res.status(400).send(error.message)
-    }); 
-    
+      M.Live.getAllSessions()
+        .then((rows) => {
+          res.status(200).send(rows)
+        })
+        .catch((err) => {
+          res.statusMessage = err;
+          res.status(500).send();
+        });
   });
 
 
@@ -103,6 +104,7 @@ module.exports = (router) => {
 
     /***********  SAVING LIVE   **********/
     router.post('/api/live/save', async (req, res) => {
+      console.log("raté");
       M.Live.create(req.body)
         .then(() => res.sendStatus(200))
         .catch((err) => {
