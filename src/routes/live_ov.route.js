@@ -1,5 +1,5 @@
 const OpenVidu = require('openvidu-node-client').OpenVidu;
-const OPENVIDU_URL = 'https://162.38.114.61:4443';
+const OPENVIDU_URL = process.env.OPENVIDU_URL;
 const OPENVIDU_SECRET = process.env.OPENVIDU_SECRET;
 const OV= new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
 
