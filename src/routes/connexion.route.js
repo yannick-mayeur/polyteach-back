@@ -26,7 +26,7 @@ module.exports = (router) => {
         };
         const isEmailAlreadyUsed = await M.Login.isEmailAlreadyUsed(decodedToken.email);
         if (isEmailAlreadyUsed) {
-          let completeUser = undefined;
+          
           if(user.role == 'teacher') {
             const teacher = await M.Teacher.getByName(user.firstname, user.lastname);
             res.status(200).send(teacher);

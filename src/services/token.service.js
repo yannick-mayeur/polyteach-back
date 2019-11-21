@@ -16,7 +16,7 @@ const generateToken = function (firstname, lastname, role, section) {
 const decryptToken = function (token) {
   return jwt.verify(token, process.env.SESSION_SECRET, (err, decoded) => {
     if (err) {
-      throw new Error("Token invalid.")
+      throw new Error('Token invalid.');
     }
     return decoded;
   });
