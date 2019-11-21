@@ -27,15 +27,6 @@ module.exports = (router) => {
     }
   });
 
-  M.Course.getUserCourses(req.user.id)
-    .then((courses) => res.status(200).send(courses))
-    .catch((e) => {
-      res.statusMessage = e;
-      logger.log('error', 'GET /courses failed', e);
-      res.status(500).send();
-    });
-
-
   router.post('/courses', async (req, res) => {
     logger.log('info', 'received request: POST /courses\nbody:', req.body);
     M.Course.create(req.body)
