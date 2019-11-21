@@ -30,7 +30,7 @@ module.exports = (router) => {
   router.post('/courses', async (req, res) => {
     logger.log('info', 'received request: POST /courses\nbody:', req.body);
     // Check if teacher
-    if (req.user.role === 1) {
+    if (req.infos_token.role === 'teacher') {
       M.Course.create(req.body, req.user.id)
         .then((course) => res.status(200).send(course))
         .catch((err) => {
