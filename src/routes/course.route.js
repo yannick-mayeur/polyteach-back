@@ -27,7 +27,7 @@ module.exports = (router) => {
     }
   });
 
-  router.post('/courses', async (req, res) => {
+  router.post('/courses', login, async (req, res) => {
     logger.log('info', 'received request: POST /courses\nbody:', req.body);
     // Check if teacher
     if (req.infos_token.role === 'teacher') {
