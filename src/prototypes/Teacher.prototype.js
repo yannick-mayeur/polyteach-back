@@ -3,8 +3,8 @@ module.exports = class Teacher {
     this.id = idteacher;
     this.email = emailteacher;
     this.role = roleteacher;
-    this.firstName = firstnameteacher;
-    this.lastName = lastnameteacher;
+    this.firstname = firstnameteacher;
+    this.lastname = lastnameteacher;
   }
 
   static dbToTeacher(obj) {

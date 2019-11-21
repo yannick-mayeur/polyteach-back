@@ -52,20 +52,22 @@ const Course = {
     INNER JOIN student S ON S.idstudent = P."iduser-possescourse"
     LEFT JOIN ratingcourse R ON C.idcourse = R."idcourse-ratingcourse"
     INNER JOIN teacher T ON T.idteacher = C."idteacher-course"
-    where S.idstudent = $1`;
+    where S.idstudent = $1;`;
     const values = [userId];
     return db.query(query, values)
       .then(async ({ rows }) => {
-        console.log(rows)
         const courses = await Promise.all(rows.map(row => {
-          return new Promise(function (resolve, reject) {
+          return new Promise(function (resolve) {
+
             const course = P.Course.dbToCourse(row);
             course.teacher = P.Teacher.dbToTeacher(row);
-            course.rating = row["value-ratingcourse"];
+            course.bookmarked = row.bookmarked;
+            course.rating = row['value-ratingcourse'];
 
             // calcul rating
             return getAverageRating(course.id).then(rate => {
               course.averageRating = rate;
+
               resolve(course);
             });
           });
@@ -210,22 +212,118 @@ const Course = {
     }
   },
   async getAverageRating(idCourse) {
-    const q = `SELECT * FROM ratingcourse WHERE "idcourse-ratingcourse" = $1`;
+    const q = 'SELECT * FROM ratingcourse WHERE "idcourse-ratingcourse" = $1';
     return db.query(q, [idCourse])
       .then(({ rows }) => {
         if (rows.length > 0) {
-          let totalScore = 0
+          let totalScore = 0;
           rows.map(row => {
             totalScore += row['value-ratingcourse'];
           });
 
-          return totalScore / rows.length
+          return totalScore / rows.length;
         }
         return undefined;
       })
       .catch(err => {
         console.log(err);
         throw new Error('Error course.model getAverageRating');
+      });
+  },
+
+  async getById(idCourse) {
+    const q = 'SELECT * FROM course WHERE idCourse=$1';
+    return db.query(q, [idCourse])
+      .then(({ rows }) => {
+        if (rows.length > 0) {
+          return P.Course.dbToCourse(rows[0]);
+        }
+        return undefined;
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error('Error course.model getByID');
+      });
+  },
+
+  /**
+   * Return true if ok, else throw error.
+   * @param {number} idUser 
+   * @param {number} idCourse 
+   */
+  async bookmark(idUser, course) {
+    const q = `UPDATE public.possescourse
+    SET bookmarked=true
+    WHERE "iduser-possescourse"=$1 and "idcourse-possescourse"=$2 returning *;`;
+    return db.query(q, [idUser, course.id])
+      .then(async ({ rows }) => {
+        if (rows.length > 0) {
+          course.bookmarked = true;
+          return course;
+        }
+
+        throw new Error('Course.model bookmark, no course or not authorize to bookmark.');
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error('Error course.model bookmark.');
+      });
+  },
+
+  async unbookmark(idUser, course) {
+    const q = `UPDATE public.possescourse
+    SET bookmarked=false
+    WHERE "iduser-possescourse"=$1 and "idcourse-possescourse"=$2 returning *;`;
+    return db.query(q, [idUser, course.id])
+      .then(({ rows }) => {
+        if (rows.length > 0) {
+          course.bookmarked = false;
+          return course;
+        }
+
+        throw new Error('Course.model bookmark, no course or not authorize to bookmark.');
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error('Eroor course.model unbookmark');
+      });
+  },
+
+  async rate(idUser, course, rate) {
+    const q = `INSERT INTO ratingcourse(
+      "iduser-ratingcourse", "idcourse-ratingcourse", "value-ratingcourse")
+      VALUES ($1, $2, $3) returning *;`;
+    return db.query(q, [idUser, course.id, rate])
+      .then(({ rows }) => {
+        if (rows.length > 0) {
+          course.rating = rate;
+          return course;
+        }
+
+        throw new Error('Course.model rate, no course or not authorize to rate.');
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error('');
+      });
+  },
+
+  async updateRate(idUser, course, rate) {
+    const q = `UPDATE ratingcourse
+    SET  "value-ratingcourse"=$3
+    WHERE "iduser-ratingcourse"=$1 and "idcourse-ratingcourse"=$2 returning *;`;
+    return db.query(q, [idUser, course.id, rate])
+      .then(({ rows }) => {
+        if (rows.length > 0) {
+          course.rating = rate;
+          return course;
+        }
+
+        throw new Error('Course.model rate, no course or not authorize to rate.');
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error('');
       });
   },
 };
