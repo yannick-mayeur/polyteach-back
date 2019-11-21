@@ -1,10 +1,9 @@
 module.exports = class Course {
-  constructor(idCourse, nameCourse, descriptionCourse, pictureCourse, class_course, idteacher_course, creationdate, isig3, isig4, isig5) {
+  constructor(idCourse, nameCourse, descriptionCourse, pictureCourse, idteacher_course, creationdate, isig3, isig4, isig5) {
     this.id = idCourse;
     this.name = nameCourse;
     this.description = descriptionCourse;
     this.picture = pictureCourse;
-    this.class = class_course;
     this.idteacher = idteacher_course;
     this.creationdate = creationdate;
     this.isig3 = isig3;
@@ -13,7 +12,7 @@ module.exports = class Course {
   }
 
   static dbToCourse(obj) {
-    return new Course(obj.idcourse, obj.namecourse, obj.descriptioncourse, obj.picturecourse, obj['class-course'], obj['idteacher-course'], obj.creationdate, obj.isig3selected, obj.isig4selected, obj.isig5selected);
+    return new Course(obj.idcourse, obj.namecourse, obj.descriptioncourse, obj.picturecourse, obj['idteacher-course'], obj.creationdate, obj.isig3selected, obj.isig4selected, obj.isig5selected);
   }
 
   static dbToCourses(objs) {

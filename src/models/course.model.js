@@ -56,7 +56,7 @@ const Course = {
     const values = [userId];
     return db.query(query, values)
       .then(async ({ rows }) => {
-        const courses = await Promise.all(rows.map(row => {
+        return await Promise.all(rows.map(row => {
           return new Promise(function (resolve) {
 
             const course = P.Course.dbToCourse(row);
@@ -72,8 +72,6 @@ const Course = {
             });
           });
         }));
-
-        return courses;
       })
       .catch((e) => {
         logger.log('error', 'Course.getUserCourses \n', e);
@@ -83,10 +81,30 @@ const Course = {
 
   async getTeacherCourses(teacherId) {
     logger.info('Course.getTeacherCourses called', teacherId);
-    const query = 'SELECT * FROM course C WHERE C."idteacher-course" = $1;';
+    const getAverageRating = this.getAverageRating;
+    const query = `SELECT * FROM course C
+    INNER JOIN teacher T ON T.idteacher = C."idteacher-course"
+    where T.idteacher = $1;`;
     const values = [teacherId];
     return db.query(query, values)
-      .then(({ rows }) => { return P.Course.dbToCourses(rows); })
+      .then(async ({rows}) => {
+        return await Promise.all(rows.map(row => {
+          return new Promise(function (resolve) {
+
+            const course = P.Course.dbToCourse(row);
+            course.teacher = P.Teacher.dbToTeacher(row);
+            course.bookmarked = row.bookmarked;
+            course.rating = row['value-ratingcourse'];
+
+            // calcul rating
+            return getAverageRating(course.id).then(rate => {
+              course.averageRating = rate;
+
+              resolve(course);
+            });
+          });
+        }));
+      })
       .catch((e) => {
         logger.log('error', 'Course.getTeacherCourses', e);
         throw new Error('error course getTeacherCourses');
@@ -95,9 +113,9 @@ const Course = {
 
   async create(obj, teacherId) {
     logger.info('Course.create called');
-    const text = 'INSERT INTO course(idcourse, namecourse, descriptioncourse, picturecourse, "idteacher-course") \
-                  VALUES(DEFAULT, $1, $2, $3, $4) RETURNING *;';
-    const values = [obj.name, obj.description, obj.picture, teacherId];
+    const text = 'INSERT INTO course(idcourse, namecourse, descriptioncourse, picturecourse, "idteacher-course", creationdate, isig3selected, isig4selected, isig5selected) \
+                  VALUES(DEFAULT, $1, $2, $3, $4, CURRENT_TIME, $5, $6, $7) RETURNING *;';
+    const values = [obj.name, obj.description, obj.picture, teacherId, obj.students.isIG3Added, obj.students.isIG4Added, obj.students.isIG5Added];
     try {
       const resCourse = await db.query(text, values);
       let res = resCourse.rows[0];
@@ -116,8 +134,8 @@ const Course = {
       }
 
       // Creation of Possescourse
-      if (Array.isArray(obj.students)) {
-        res.possescourse = await Promise.all(obj.students.map(student => {
+      if (Array.isArray(obj.students.selectedStudents)) {
+        res.possescourse = await Promise.all(obj.students.selectedStudents.map(student => {
           return Possescourse.create({
             user: student.id,
             course: resCourse.rows[0].idcourse,
