@@ -42,13 +42,40 @@ const Video = {
 
   },
   async getAllVideosByCourse(idCourse) {
-    const q = 'SELECT * FROM video v WHERE v."idcourse-video" = $1;';
+    const q = `SELECT * FROM video v WHERE v."idcourse-video" = $1
+    LEFT JOIN ratingvideo;`;
     return db.query(q, [idCourse])
       .then(({ rows }) => {return P.Video.dbToVideos(rows);})
       .catch((e) => {
         logger.log('error', 'Video.getAllVideosByCourse', e);
         throw new Error('error video getAllVideosByCourse');
       });
+  },
+
+  async rate(idUser, video, rate) {
+    const q = 'INSERT INTO ratingvideo values($1, $2, $3);';
+    return db.query(q, [idUser, video.id, rate])
+    .then(() => {
+      video.rating = rate
+      return video;
+    })
+    .catch(err => {
+      console.log(err);
+      throw new Error('');
+    });
+  },
+
+  async updateRate(idUser, video, rate) {
+    const q = 'UPDATE ratingvideo set "value-ratingvideo"=$3 where "iduser-ratingvideo"=$1 and "idvideo-ratingvideo"=$2;';
+    return db.query(q, [idUser, video.id, rate])
+    .then(() => {
+      video.rating = rate
+      return video;
+    })
+    .catch(err => {
+      console.log(err);
+      throw new Error('');
+    });
   },
 };
 
