@@ -1,5 +1,5 @@
 const M = require('../models');
-const { extractNameFromEmail } = require('../services/umMail.service');
+const T = require('../services/token.service');
 
 module.exports = (router) => {
   router.post('/login', async (req, res) => {
@@ -13,34 +13,42 @@ module.exports = (router) => {
   });
 
   router.post('/signup', async (req, res) => {
-    const data = req.body;
-    const isEmailAlreadyUsed = await M.Login.isEmailAlreadyUsed(data.email);
-    if (isEmailAlreadyUsed) {
-      res.statusMessage = 'This email is already used.';
-      res.status(401).send();
-    }
-
-    // Extract name and lastname from the email
-    const fullName = extractNameFromEmail(data.email);
-
-    if (data.email.endsWith('etu.umontpellier.fr')) {
-      M.Login.signupStudent(data.email, data.password, fullName.firstname, fullName.lastname, data.class).then((data) => {
-        res.status(200).send(data);
-      }).catch(err => {
-        console.log(err);
-        res.statusMessage = err;
-        res.status(500).send();
-      });
-    } else if (data.email.endsWith('umontpellier.fr')) {
-      M.Login.signupTeacher(data.email, data.password, fullName.firstname, fullName.lastname).then((data) => {
-        res.status(200).send(data);
-      }).catch(err => {
-        console.log(err);
-        res.statusMessage = err;
-        res.status(500).send();
-      });
+    const token = req.body.token;
+    if (T.isTokenValid(token)) {
+      const decodedToken = T.decryptToken(token);
+      const user = {
+        email: decodedToken.email,
+        firstname: decodedToken.firstname,
+        lastname: decodedToken.lastname,
+        role: decodedToken.role,
+        section: decodedToken.section
+      };
+      const isEmailAlreadyUsed = await M.Login.isEmailAlreadyUsed(decodedToken.email);
+      if (isEmailAlreadyUsed) {
+        res.statusMessage = 'This email is already used.';
+        res.status(200).send(user);
+      } else {
+        if (decodedToken.role == 'student') {
+          M.Login.signupStudent(user.email, user.firstname, user.lastname, user.section.toUpperCase()).then(() => {
+            res.status(200).send(user);
+          }).catch(err => {
+            console.log(err);
+            res.statusMessage = err;
+            res.status(500).send();
+          });
+        } else if (decodedToken.role == 'teacher') {
+          M.Login.signupTeacher(user.email, user.firstname, user.lastname).then(() => {
+            res.status(200).send(user);
+          }).catch(err => {
+            console.log(err);
+            res.statusMessage = err;
+            res.status(500).send();
+          });
+        } else {
+          res.status(401).send();
+        }
+      }
     } else {
-      res.statusMessage = 'You are not allowed to create an account with this email.';
       res.status(401).send();
     }
   });
