@@ -93,11 +93,11 @@ const Course = {
       });
   },
 
-  async create(obj) {
+  async create(obj, teacherId) {
     logger.info('Course.create called');
-    const text = 'INSERT INTO course(idcourse, namecourse, descriptioncourse, picturecourse) \
-                  VALUES(DEFAULT, $1, $2, $3) RETURNING *;';
-    const values = [obj.name, obj.description, obj.picture];
+    const text = 'INSERT INTO course(idcourse, namecourse, descriptioncourse, picturecourse, "idteacher-course") \
+                  VALUES(DEFAULT, $1, $2, $3, $4) RETURNING *;';
+    const values = [obj.name, obj.description, obj.picture, teacherId];
     try {
       const resCourse = await db.query(text, values);
       let res = resCourse.rows[0];
