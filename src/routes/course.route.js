@@ -29,12 +29,19 @@ module.exports = (router) => {
 
   router.post('/courses', async (req, res) => {
     logger.log('info', 'received request: POST /courses\nbody:', req.body);
-    M.Course.create(req.body)
-      .then((course) => res.status(200).send(course))
-      .catch((err) => {
-        logger.log('error', 'POST /courses failed', err);
-        res.sendStatus(500);
-      });
+    // Check if teacher
+    if (req.user.role === 1) {
+      M.Course.create(req.body, req.user.id)
+        .then((course) => res.status(200).send(course))
+        .catch((err) => {
+          logger.log('error', 'POST /courses failed', err);
+          res.sendStatus(500);
+        });
+    }else{
+      logger.log('warning', 'Not a teacher trying to POST /courses');
+      res.statusMessage = 'You have to be a teacher to create a course.';
+      res.sendStatus(403);
+    }
   });
 
   router.get('/courses/getAllByClass', login, async (req, res) => {
