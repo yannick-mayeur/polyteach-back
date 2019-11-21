@@ -77,13 +77,11 @@ const login = {
       });
   },
 
-  async signupStudent(email, password, firstName, lastName, classStudent) {
+  async signupStudent(email, firstName, lastName, classStudent) {
 
     const query = 'INSERT INTO student values(DEFAULT, $1, $2, $3, $4, $5, $6) RETURNING *';
 
-    // hash password
-    const passwordEncrypted = SToken.encryptPassword(password);
-    return db.query(query, [email, passwordEncrypted, 0, firstName, lastName, classStudent])
+    return db.query(query, [email, 'password', 0, firstName, lastName, classStudent])
       .then(({ rows }) => {
         return P.Student.dbToStudent(rows[0]);
       })
@@ -93,12 +91,10 @@ const login = {
       });
   },
 
-  async signupTeacher(email, password, firstName, lastName) {
+  async signupTeacher(email, firstName, lastName) {
     const query = 'INSERT INTO teacher values(DEFAULT, $1, $2, $3, $4, $5) RETURNING *';
 
-    // hash password
-    const passwordEncrypted = SToken.encryptPassword(password);
-    return db.query(query, [email, passwordEncrypted, 1, firstName, lastName])
+    return db.query(query, [email, 'password', 1, firstName, lastName])
       .then(({ rows }) => {
         return P.Teacher.dbToTeacher(rows[0]);
       })

@@ -45,13 +45,38 @@ const Course = {
   },
 
   async getUserCourses(userId) {
+    const getAverageRating = this.getAverageRating;
     logger.info('Course.getUserCourses called', userId);
-    const query = 'SELECT * FROM course C, possescourse P WHERE C.idcourse = P."idcourse-possescourse" AND P."iduser-possescourse" = $1;';
+    const query = `SELECT * FROM course C
+    INNER JOIN possescourse P ON C.idcourse = P."idcourse-possescourse"
+    INNER JOIN student S ON S.idstudent = P."iduser-possescourse"
+    LEFT JOIN ratingcourse R ON C.idcourse = R."idcourse-ratingcourse"
+    INNER JOIN teacher T ON T.idteacher = C."idteacher-course"
+    where S.idstudent = $1;`;
     const values = [userId];
     return db.query(query, values)
-      .then(({ rows }) => { return P.Course.dbToCourses(rows); })
+      .then(async ({ rows }) => {
+        const courses = await Promise.all(rows.map(row => {
+          return new Promise(function (resolve) {
+
+            const course = P.Course.dbToCourse(row);
+            course.teacher = P.Teacher.dbToTeacher(row);
+            course.bookmarked = row.bookmarked;
+            course.rating = row['value-ratingcourse'];
+
+            // calcul rating
+            return getAverageRating(course.id).then(rate => {
+              course.averageRating = rate;
+
+              resolve(course);
+            });
+          });
+        }));
+
+        return courses;
+      })
       .catch((e) => {
-        logger.log('error', 'Course.getUserCourses', e);
+        logger.log('error', 'Course.getUserCourses \n', e);
         throw new Error('error course getUserCourses');
       });
   },
@@ -68,11 +93,11 @@ const Course = {
       });
   },
 
-  async create(obj) {
+  async create(obj, teacherId) {
     logger.info('Course.create called');
-    const text = 'INSERT INTO course(idcourse, namecourse, descriptioncourse, picturecourse) \
-                  VALUES(DEFAULT, $1, $2, $3) RETURNING *;';
-    const values = [obj.name, obj.description, obj.picture];
+    const text = 'INSERT INTO course(idcourse, namecourse, descriptioncourse, picturecourse, "idteacher-course") \
+                  VALUES(DEFAULT, $1, $2, $3, $4) RETURNING *;';
+    const values = [obj.name, obj.description, obj.picture, teacherId];
     try {
       const resCourse = await db.query(text, values);
       let res = resCourse.rows[0];
@@ -132,7 +157,7 @@ const Course = {
             });
 
             // Add to result if the student possedes course in this class
-            if(newClass.courses.length > 0) 
+            if (newClass.courses.length > 0)
               classes.push(newClass);
           });
 
@@ -185,6 +210,121 @@ const Course = {
     }else{
       return {message: 'This course doesn\'t exist.', code: 404, success: false};
     }
+  },
+  async getAverageRating(idCourse) {
+    const q = 'SELECT * FROM ratingcourse WHERE "idcourse-ratingcourse" = $1';
+    return db.query(q, [idCourse])
+      .then(({ rows }) => {
+        if (rows.length > 0) {
+          let totalScore = 0;
+          rows.map(row => {
+            totalScore += row['value-ratingcourse'];
+          });
+
+          return totalScore / rows.length;
+        }
+        return undefined;
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error('Error course.model getAverageRating');
+      });
+  },
+
+  async getById(idCourse) {
+    const q = 'SELECT * FROM course WHERE idCourse=$1';
+    return db.query(q, [idCourse])
+      .then(({ rows }) => {
+        if (rows.length > 0) {
+          return P.Course.dbToCourse(rows[0]);
+        }
+        return undefined;
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error('Error course.model getByID');
+      });
+  },
+
+  /**
+   * Return true if ok, else throw error.
+   * @param {number} idUser 
+   * @param {number} idCourse 
+   */
+  async bookmark(idUser, course) {
+    const q = `UPDATE public.possescourse
+    SET bookmarked=true
+    WHERE "iduser-possescourse"=$1 and "idcourse-possescourse"=$2 returning *;`;
+    return db.query(q, [idUser, course.id])
+      .then(async ({ rows }) => {
+        if (rows.length > 0) {
+          course.bookmarked = true;
+          return course;
+        }
+
+        throw new Error('Course.model bookmark, no course or not authorize to bookmark.');
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error('Error course.model bookmark.');
+      });
+  },
+
+  async unbookmark(idUser, course) {
+    const q = `UPDATE public.possescourse
+    SET bookmarked=false
+    WHERE "iduser-possescourse"=$1 and "idcourse-possescourse"=$2 returning *;`;
+    return db.query(q, [idUser, course.id])
+      .then(({ rows }) => {
+        if (rows.length > 0) {
+          course.bookmarked = false;
+          return course;
+        }
+
+        throw new Error('Course.model bookmark, no course or not authorize to bookmark.');
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error('Eroor course.model unbookmark');
+      });
+  },
+
+  async rate(idUser, course, rate) {
+    const q = `INSERT INTO ratingcourse(
+      "iduser-ratingcourse", "idcourse-ratingcourse", "value-ratingcourse")
+      VALUES ($1, $2, $3) returning *;`;
+    return db.query(q, [idUser, course.id, rate])
+      .then(({ rows }) => {
+        if (rows.length > 0) {
+          course.rating = rate;
+          return course;
+        }
+
+        throw new Error('Course.model rate, no course or not authorize to rate.');
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error('');
+      });
+  },
+
+  async updateRate(idUser, course, rate) {
+    const q = `UPDATE ratingcourse
+    SET  "value-ratingcourse"=$3
+    WHERE "iduser-ratingcourse"=$1 and "idcourse-ratingcourse"=$2 returning *;`;
+    return db.query(q, [idUser, course.id, rate])
+      .then(({ rows }) => {
+        if (rows.length > 0) {
+          course.rating = rate;
+          return course;
+        }
+
+        throw new Error('Course.model rate, no course or not authorize to rate.');
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error('');
+      });
   },
 };
 
