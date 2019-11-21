@@ -30,15 +30,15 @@ test('should fetch courses', () => {
   const res = [
     {
       'description': 'Web Applications & Interoperability',
-        'id': 1,
-        'name': 'AWI',
-        'picture': 'https://icon-library.net/images/placeholder-image-icon/placeholder-image-icon-7.jpg',
+      'id': 1,
+      'name': 'AWI',
+      'picture': 'https://icon-library.net/images/placeholder-image-icon/placeholder-image-icon-7.jpg',
     },
     {
       'description': 'description 3',
-        'id': 3,
-        'name': 'DevOps',
-        'picture': 'https://static1.squarespace.com/static/559dc415e4b0fcb781ceca92/55b6c5f7e4b08c3f4b9f3f83/5c51551e4ae23755fa90f088/1548890390219/jason-leung-479251-unsplash.jpg?format=2500w',
+      'id': 3,
+      'name': 'DevOps',
+      'picture': 'https://static1.squarespace.com/static/559dc415e4b0fcb781ceca92/55b6c5f7e4b08c3f4b9f3f83/5c51551e4ae23755fa90f088/1548890390219/jason-leung-479251-unsplash.jpg?format=2500w',
     },
   ];
   pg.query.mockImplementation(() => Promise.resolve(courses));
@@ -52,7 +52,18 @@ test('should create courses', () => {
 });
 
 test('should create associated videos', async () => {
-  const obj = {name: 'AWI', description: 'pas facile', picture: 'None', videos: [{titleVideo: 'hoho'}, {titleVideo: 'hihi'}]};
+  const obj = {
+    name: 'AWI',
+    description: 'pas facile',
+    picture: 'None',
+    videos: [{titleVideo: 'hoho'}, {titleVideo: 'hihi'}],
+    students: {
+      selectedStudents: [],
+      isIG3Added: false,
+      isIG4Added: false,
+      isIG5Added: false,
+    }
+  };
   await Course.create(obj);
   return expect(Video.create).toBeCalled();
 });
@@ -66,22 +77,27 @@ test('should get video for a specific course', () => {
 
 test('should add students to possescourse', async () => {
   const obj = {
-    name: 'AWI', description: 'pas facile', picture: 'None', students: [{
-      'id': 2,
-      'email': 'bazor@etu.umontpellier.fr',
-      'role': null,
-      'firstName': 'foo',
-      'lastName': 'baz',
-      'class': 'IG4'
-    },
-    {
-      'id': 1,
-      'email': 'foobar@etu.umontpellier.fr',
-      'role': null,
-      'firstName': 'foo',
-      'lastName': 'bar',
-      'class': 'IG3'
-    }]
+    name: 'AWI', description: 'pas facile', picture: 'None', students: {
+      selectedStudents: [{
+        'id': 2,
+        'email': 'bazor@etu.umontpellier.fr',
+        'role': null,
+        'firstName': 'foo',
+        'lastName': 'baz',
+        'class': 'IG4'
+      },
+        {
+          'id': 1,
+          'email': 'foobar@etu.umontpellier.fr',
+          'role': null,
+          'firstName': 'foo',
+          'lastName': 'bar',
+          'class': 'IG3'
+        }],
+      isIG3Added: false,
+      isIG4Added: false,
+      isIG5Added: false,
+    }
   };
   await Course.create(obj);
   return expect(Possescourse.create).toBeCalled();
