@@ -114,7 +114,7 @@ const Course = {
   async create(obj, teacherId) {
     logger.info('Course.create called');
     const text = 'INSERT INTO course(idcourse, namecourse, descriptioncourse, picturecourse, "idteacher-course", creationdate, isig3selected, isig4selected, isig5selected) \
-                  VALUES(DEFAULT, $1, $2, $3, $4, CURRENT_TIME, $5, $6, $7) RETURNING *;';
+                  VALUES(DEFAULT, $1, $2, $3, $4, CURRENT_DATE, $5, $6, $7) RETURNING *;';
     const values = [obj.name, obj.description, obj.picture, teacherId, obj.students.isIG3Added, obj.students.isIG4Added, obj.students.isIG5Added];
     try {
       const resCourse = await db.query(text, values);
