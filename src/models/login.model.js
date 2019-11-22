@@ -33,7 +33,7 @@ const login = {
         if (rows.length > 0) {
           const teacher = P.Teacher.dbToTeacher(rows[0]);
           if (bcrypt.compareSync(password, rows[0].passwordteacher)) {
-            const token = SToken.generateToken(teacher.firstName, teacher.lastName, 'teacher', 'IG');
+            const token = SToken.generateToken(teacher.firstname, teacher.lastName, 'teacher', 'IG');
             return { user: teacher, token: token };
           }
 
@@ -55,7 +55,7 @@ const login = {
           if (email.endsWith('@etu.umontpellier.fr')) {
             const student = P.Student.dbToStudent(rows[0]);
             if (bcrypt.compareSync(password, rows[0].passwordstudent)) {
-              const token = SToken.generateToken(student.firstName, student.lastName, 'student', student.class);
+              const token = SToken.generateToken(student.firstname, student.lastName, 'student', student.class);
               return { user: student, token: token };
             }
           }
@@ -77,11 +77,11 @@ const login = {
       });
   },
 
-  async signupStudent(email, firstName, lastName, classStudent) {
+  async signupStudent(email, firstname, lastName, classStudent) {
 
     const query = 'INSERT INTO student values(DEFAULT, $1, $2, $3, $4, $5, $6) RETURNING *';
 
-    return db.query(query, [email, 'password', 0, firstName, lastName, classStudent])
+    return db.query(query, [email, 'password', 0, firstname, lastName, classStudent])
       .then(({ rows }) => {
         return P.Student.dbToStudent(rows[0]);
       })
@@ -91,10 +91,10 @@ const login = {
       });
   },
 
-  async signupTeacher(email, firstName, lastName) {
+  async signupTeacher(email, firstname, lastName) {
     const query = 'INSERT INTO teacher values(DEFAULT, $1, $2, $3, $4, $5) RETURNING *';
 
-    return db.query(query, [email, 'password', 1, firstName, lastName])
+    return db.query(query, [email, 'password', 1, firstname, lastName])
       .then(({ rows }) => {
         return P.Teacher.dbToTeacher(rows[0]);
       })

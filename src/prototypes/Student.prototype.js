@@ -3,8 +3,8 @@ module.exports = class Student {
     this.id = idstudent;
     this.email = emailstudent;
     this.role = rolestudent;
-    this.firstName = firstnamestudent;
-    this.lastName = lastnamestudent;
+    this.firstname = firstnamestudent;
+    this.lastname = lastnamestudent;
     this.class = classstudent;
   }
 

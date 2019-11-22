@@ -36,4 +36,25 @@ module.exports = (router) => {
         res.status(500).send();
       });
   });
+
+  router.post('/video/rate', login, async (req, res) => {
+    M.Video.rate(req.user.id, req.body.video, req.body.rate).then((video) => {
+      res.status(200).send(video);
+    })
+      .catch(err => {
+        res.statusMessage = err;
+        res.status(500).send();
+      });
+  });
+
+  router.put('/video/rate', login, async (req, res) => {
+    M.Video.updateRate(req.user.id, req.body.video, req.body.rate).then((video) => {
+      res.status(200).send(video);
+    })
+      .catch(err => {
+        res.statusMessage = err;
+        res.status(500).send();
+      });
+  });
+
 };
