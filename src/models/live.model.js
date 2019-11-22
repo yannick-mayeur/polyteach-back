@@ -1,10 +1,10 @@
 const db = require('../db');
 
 const Live = {
-  async create(obj, nameteacher) {
+  async create(obj) {
     const now= ''+Date.now();
     const text = 'INSERT INTO live VALUES($1, $2, $3, $4, $5, $6,$7) RETURNING *';
-    const values = [obj.idsession,obj.namesession,nameteacher,obj.descriptionlive,now,null,obj.idcourselive];
+    const values = [obj.idsession,obj.namesession,obj.nameteacher,obj.descriptionlive,now,null,obj.idcourselive];
     return db.query(text, values)
       .then(res => res)
       .catch(e => {
@@ -14,14 +14,16 @@ const Live = {
   },
 
   async getInfos(sessionId) {
-    const query = 'SELECT * FROM live where idsession=$1 AND timestartlive IS NOT NULL;';
+    const query = 'SELECT * FROM live where idsession = $1;';
     return db.query(query, [sessionId])
       .then(({ rows }) => {
-        rows.length>0 ? rows[0] : rows;
+        console.log(rows);
+        if(rows.length > 0) {return rows[0];}
+        else {return rows;}
       })
       .catch((err) => {
         console.log(err);
-        throw new Error('error course getAll');
+        throw new Error('error getInfos session');
       });
   },
   async getAllSessions() {

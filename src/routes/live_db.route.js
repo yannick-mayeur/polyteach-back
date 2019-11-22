@@ -1,11 +1,13 @@
 const M = require('../models');
 module.exports = (router) => {
 
-  router.get('/api/live/infos/:sessionId', async (req, res) => {
+  router.get('/api/live/data/:sessionId', async (req, res) => {
 
     let sessionId = req.params.sessionId;
     M.Live.getInfos(sessionId)
-      .then((row) => res.status(200).send(row))
+      .then((row) => {
+        res.status(200).send(row);
+      })
       .catch((err) => {
         res.statusMessage = err;
         res.status(500).send();
@@ -24,9 +26,8 @@ module.exports = (router) => {
   });
 
   router.post('/api/live/save', async (req, res) => {
-    const nameTeacher='';
-    //  const nameTeacher = req.user.firstname + " " + req.user.lastname;
-    M.Live.create(req.body, nameTeacher)
+
+    M.Live.create(req.body)
       .then(() => res.sendStatus(200))
       .catch((err) => {
         res.statusMessage = err;
