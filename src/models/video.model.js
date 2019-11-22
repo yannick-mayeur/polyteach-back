@@ -108,6 +108,18 @@ const Video = {
         throw new Error('');
       });
   },
+
+  async deleteFromCourse(idCourse) {
+    const q = 'delete from video where "idcourse-video" = $1';
+    return db.query(q, [idCourse])
+    .then(({ rows }) => {
+      return rows;
+    })
+    .catch(err => {
+      console.log(err);
+      throw new Error('video.model deleteFromCourse');
+    });
+  },
 };
 
 module.exports = Video;

@@ -154,4 +154,25 @@ module.exports = (router) => {
         res.status(500).send();
       });
   });
+
+  router.get('/course/allInfosById/:idCourse', async (req, res) => {
+    
+    M.Course.getAllInfosById(req.params.idCourse).then( (course) => {
+      res.status(200).send(course);
+    })
+    .catch( err => {
+      res.statusMessage = err;
+      res.status(500).send();
+    });
+  })
+
+  router.put('/course/updateCourse', async (req, res) => {
+    M.Course.updateCourse(req.body).then( () => {
+      res.status(200).send();
+    })
+    .catch( err => {
+      res.statusMessage = err;
+      res.status(500).send();
+    });
+  })
 };

@@ -3,6 +3,9 @@ const P = require('../prototypes');
 const logger = require('../helpers/logger');
 const Video = require('./video.model');
 const Possescourse = require('./possescourse.model');
+const MVideo = require('./video.model');
+const MPossescourse = require('./possescourse.model');
+
 
 const Course = {
   async getAll() {
@@ -13,6 +16,102 @@ const Course = {
       .catch((e) => {
         logger.log('error', 'Course.getAll', e);
         throw new Error('error course getAll');
+      });
+  },
+
+  /**
+   * Retriveve all informations about a course from its ID
+   * @param {number} idCourse of course who wants the data
+   */
+  async getAllInfosById(idCourse) {
+    const q = `SELECT * FROM course c
+    JOIN teacher t ON t.idteacher = c."idteacher-course"
+    LEFT JOIN possescourse pc ON pc."idcourse-possescourse" = c.idcourse
+    LEFT JOIN student s ON s.idstudent = pc."iduser-possescourse"
+    WHERE c.idcourse = $1;`;
+    return db.query(q, [idCourse])
+      .then(async ({ rows }) => {
+        if (rows.length > 0) {
+          
+          // extract all students from the request
+          const course = P.Course.dbToCourse(rows[0]);
+          const students = rows.map(row => {
+            if (row.idstudent != null) {
+              return P.Student.dbToStudent(row);
+            } else {
+              return []
+            }
+            
+          });
+
+
+          // Fetch videos in this course
+          const videos = await MVideo.getAllVideosByCourse(course.id);
+          
+          course.students = students;
+          course.videos = videos;
+
+          return course;
+        }
+
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error('Error course.model getCourseById');
+      });
+  },
+
+  /**
+   * Update the course, the input form is non conventional.
+   * @param {FORM NO CONFORME} course 
+   */
+  async updateCourse(course) {
+    console.log(course)
+    const q = `UPDATE course set namecourse = $1, picturecourse = $2, descriptioncourse = $3 where idcourse=$4;`;
+    return db.query(q, [course.name, course.picture, course.description, course.id])
+    .then(async ({ rows }) => {
+
+      // Course updated !
+
+      // go update the possescourse
+      // First, delete all, after add all
+      await MPossescourse.deleteFromCourse(course.id);
+      await Promise.all(course.students.selectedStudents.map(student => {
+        return new Promise(function (resolve) {
+          return MPossescourse.addPosses(student.id, course.id, false).then(resolve())
+        });
+      }));
+
+      // UPDATE videos
+      // Fetch all, compare changes, delete all and add the videos
+      await MVideo.deleteFromCourse(course.id);
+      await Promise.all(course.videos.map(video => {
+        return new Promise(function (resolve) {
+          video.title = video.title
+          video.fk_course = course.id
+          console.log(video);
+          return MVideo.create(video).then(resolve())
+        });
+      }));
+
+
+      return rows;
+    })
+    .catch(err => {
+      console.log(err);
+      throw new Error('Error course.model update Course');
+    });
+  },
+
+  async get() {
+    const q = ``;
+    return db.query(q, [])
+      .then(({ rows }) => {
+        return rows;
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error('');
       });
   },
 
@@ -27,13 +126,13 @@ const Course = {
       if (res.rows && res.rows.length === 1) {
         course = res.rows[0];
       }
-    } catch(e) {
+    } catch (e) {
       logger.log('error', 'error course.getCourse: could not fetch course', e);
       throw new Error('Could not fetch course');
     }
     try {
       videos = await Video.getAllVideosByCourse(course.idcourse);
-    } catch(e) {
+    } catch (e) {
       logger.log('error', 'error course.getCourse: could not fetch videos', e);
       throw new Error('Could not fetch course videos');
     }
@@ -87,7 +186,7 @@ const Course = {
     where T.idteacher = $1;`;
     const values = [teacherId];
     return db.query(query, values)
-      .then(async ({rows}) => {
+      .then(async ({ rows }) => {
         return await Promise.all(rows.map(row => {
           return new Promise(function (resolve) {
 
@@ -124,7 +223,7 @@ const Course = {
       if (Array.isArray(obj.videos)) {
         res.videos = await Promise.all(obj.videos.map(video => {
           return Video.create({
-            title: video.titleVideo,
+            title: video.title,
             videoURL: video.videoURL,
             vttURL: video.vttURL,
             fk_course: resCourse.rows[0].idcourse
@@ -211,22 +310,22 @@ const Course = {
     const result = await db.query(q, [idCourse]);
 
     // We check if the course existsnpm
-    if(result.rows[0] !== undefined){
+    if (result.rows[0] !== undefined) {
       // If it's the good teacher we delete the course
-      if(result.rows[0]['idteacher-course'] === idTeacher) {
+      if (result.rows[0]['idteacher-course'] === idTeacher) {
         const q = 'DELETE FROM course c WHERE c.idcourse = $1 RETURNING *;';
         return db.query(q, [idCourse])
-          .then(({ rows }) => {return P.Course.dbToCourses(rows);})
+          .then(({ rows }) => { return P.Course.dbToCourses(rows); })
           .catch((err) => {
             console.log(err);
-            logger.log('error', 'Course.deleteCourse(' +idCourse+'): ' + err);
+            logger.log('error', 'Course.deleteCourse(' + idCourse + '): ' + err);
             throw new Error('Error course.model deleteCourse');
           });
-      }else{
-        return {message: 'This course is not your\'s.', code: 403, success: false};
+      } else {
+        return { message: 'This course is not your\'s.', code: 403, success: false };
       }
-    }else{
-      return {message: 'This course doesn\'t exist.', code: 404, success: false};
+    } else {
+      return { message: 'This course doesn\'t exist.', code: 404, success: false };
     }
   },
   async getAverageRating(idCourse) {

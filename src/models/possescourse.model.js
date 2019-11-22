@@ -17,6 +17,31 @@ const Possescourse = {
       throw new Error('error possescourse create');
     }
   },
+
+
+  async addPosses(iduser, idCourse, bookmarked) {
+    const q = `insert into possescourse values($1, $2, $3);`;
+    return db.query(q, [iduser, idCourse, bookmarked])
+    .then(({ rows }) => {
+      return rows;
+    })
+    .catch(err => {
+      console.log(err);
+      throw new Error('possescourse addPosses');
+    });
+  },
+
+  async deleteFromCourse(idCourse) {
+    const q = `delete from possescourse where "idcourse-possescourse" = $1`;
+    return db.query(q, [idCourse])
+    .then(({ rows }) => {
+      return rows;
+    })
+    .catch(err => {
+      console.log(err);
+      throw new Error('possescourse.model deleteFromCourse');
+    });
+  },
 };
 
 module.exports = Possescourse;
