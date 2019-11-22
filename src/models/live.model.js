@@ -3,8 +3,8 @@ const db = require('../db');
 const Live = {
   async create(obj) {
     const now= ''+Date.now();
-    const text = 'INSERT INTO live VALUES($1, $2, $3, $4, $5, $6,$7) RETURNING *';
-    const values = [obj.idsession,obj.namesession,obj.nameteacher,obj.descriptionlive,now,null,obj.idcourselive];
+    const text = 'INSERT INTO live VALUES($1, $2, $3, $4, $5, $6) RETURNING *';
+    const values = [obj.idsession,obj.namesession,obj.nameteacher,obj.descriptionlive,now,null];
     return db.query(text, values)
       .then(res => res)
       .catch(e => {
