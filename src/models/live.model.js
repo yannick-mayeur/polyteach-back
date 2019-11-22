@@ -17,7 +17,6 @@ const Live = {
     const query = 'SELECT * FROM live where idsession = $1;';
     return db.query(query, [sessionId])
       .then(({ rows }) => {
-        console.log(rows);
         if(rows.length > 0) {return rows[0];}
         else {return rows;}
       })
@@ -30,7 +29,6 @@ const Live = {
     const query = 'SELECT * FROM live where timestoplive IS NULL;';
     return db.query(query)
       .then(({ rows }) => {
-        console.log('rows'+rows.length);
         return rows;
       })
       .catch((err) => {
