@@ -154,4 +154,22 @@ module.exports = (router) => {
         res.status(500).send();
       });
   });
+
+  router.put('/courses/:idCourse', login, async (req, res) => {
+    logger.log('info', 'received request: PUT /courses\nparams:', req.body, req.params);
+    //Check if it's a teacher
+    if (req.infos_token.role === 'teacher') {
+      M.Course.updateCourse(req.body.course, req.params.idCourse, req.user.id).then((courseUpdated) => {
+        res.status(200).send(courseUpdated);
+      })
+        .catch(err => {
+          logger.log('error', 'PUT /courses/:idCourse failed', err);
+          res.statusMessage = err;
+          res.status(500).send();
+        });
+    } else {
+      res.status(403).send({message: 'You are not a teacher.'});
+    }
+  });
+
 };

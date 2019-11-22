@@ -344,6 +344,111 @@ const Course = {
         throw new Error('');
       });
   },
+
+  async updateCourse(course, idCourse, idTeacher) {
+    logger.info('Course.updateCourse called');
+
+    const q = 'SELECT * FROM course c WHERE c.idcourse = $1';
+    const result = await db.query(q, [idCourse]);
+
+    // We check if the course exists
+    if (result.rows[0] !== undefined) {
+      // If it's the good teacher we delete the course
+      if (result.rows[0]['idteacher-course'] === idTeacher) {
+
+        // Select videos of the course
+        const q = 'SELECT * FROM video v WHERE v."idcourse-video" = $1';
+        const result2 = await db.query(q, [idCourse]);
+        let videos = [];
+        // Handle videos
+        if (result2.rows[0] !== undefined) {
+          if (Array.isArray(course.videos)) {
+            course.videos.forEach(video => {
+              let found = false;
+              result2.rows.forEach(bdVideo => {
+                // If the video is already in the DB we update it
+                if (video.idvideo === bdVideo['idvideo']) {
+                  found = true;
+                  videos = videos.push(P.Video.dbToVideo(Video.updateVideo(video.idvideo, video)[0]));
+                }
+              });
+              // If the video was not found in BD we add it
+              if (!found) {
+                videos = videos.push(P.Video.dbToVideo(Video.create(video)[0]));
+              }
+            });
+
+            result2.rows.forEach(bdVideo => {
+              let found = false;
+              course.video.forEach(video => {
+                if (video.idvideo === bdVideo['idvideo']) {
+                  found = true;
+                }
+              });
+              // If in the new course a video doesn't appear anymore
+              if (!found) {
+                Video.deleteVideo(bdVideo['idvideo']);
+              }
+            });
+
+          }
+        }
+
+        // Select possescourse for the course
+        const r = 'SELECT * FROM possescourse WHERE "idcourse-possescourse" = $1';
+        const result3 = await db.query(r, [idCourse]);
+        let possescourse = [];
+        // Handle videos
+        if (result2.rows[0] !== undefined) {
+          if (Array.isArray(course.students.selectedStudents)) {
+            course.students.selectedStudents.forEach(student => {
+              let found = false;
+              result3.rows.forEach(bdStudent => {
+                // If the video is already in the DB we update it
+                if (student.id === bdStudent['iduser-possescourse']) {
+                  found = true;
+                  possescourse = possescourse.push(P.Possescourse.dbToPossecourse(Possescourse.update(student.id, idCourse, student)[0]));
+                }
+              });
+              // If the video was not found in BD we add it
+              if (!found) {
+                possescourse = possescourse.push(P.Possescourse.dbToPossecourse(Possescourse.create(student)[0]));
+              }
+            });
+
+            result3.rows.forEach(bdStudent => {
+              let found = false;
+              course.students.selectedStudents.forEach(student => {
+                if (student.id === bdStudent['iduser-possescourse']) {
+                  found = true;
+                }
+              });
+              // If in the new course a video doesn't appear anymore
+              if (!found) {
+                Possescourse.delete(bdStudent['idvideo'], idCourse);
+              }
+            });
+
+          }
+        }
+
+        const r2 = 'UPDATE course SET namecourse = $1 picturecourse = $2 descriptioncourse = $3 "idteacher-course" = $4 creationdate = $5 isig3selected = $6 isig4selected = $7 isig5selected = $8 WHERE idcourse = $9 RETURNING *';
+        const res = await db.query(r2, [idCourse]);
+        let course = P.Course.dbToCourse(res[0]);
+        // eslint-disable-next-line require-atomic-updates
+        course.videos = videos;
+        // eslint-disable-next-line require-atomic-updates
+        course.possescourse = possescourse;
+
+        return course;
+
+      } else {
+        return {message: 'This course is not your\'s.', code: 403, success: false};
+      }
+    } else {
+      return {message: 'This course doesn\'t exist.', code: 404, success: false};
+    }
+  }
 };
 
 module.exports = Course;

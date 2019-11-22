@@ -18,6 +18,37 @@ const Video = {
       throw new Error('error video create');
     }
   },
+
+  async updateVideo(idVideo, obj) {
+    logger.log('info', 'video.model.updateVideo called with:', obj);
+    const text = 'UPDATE video SET titlevideo = $1 hashserver = $2, hashvtt = $3, "idcourse-video" = $4 WHERE idvideo = $5 RETURNING *';
+    const values = [obj.title, obj.videoURL, obj.vttURL, obj.fk_course, idVideo];
+    try {
+      const resVideo = await db.query(text, values);
+      const res = resVideo.rows[0];
+      logger.log('info', 'video.model.updateVideo returning:', res);
+      return res;
+    } catch (e) {
+      logger.error(e.stack);
+      throw new Error('error video updateVideo');
+    }
+  },
+
+  async deleteVideo(idVideo) {
+    logger.log('info', 'video.model.deleteVideo called with:', idVideo);
+    const text = 'DELETE * FROM video WHERE idvideo = $1 RETURNING *';
+    const values = [idVideo];
+    try {
+      const resVideo = await db.query(text, values);
+      const res = resVideo.rows[0];
+      logger.log('info', 'video.model.deleteVideo returning:', res);
+      return res;
+    } catch (e) {
+      logger.error(e.stack);
+      throw new Error('error video deleteVideo');
+    }
+  },
+
   async getVideoById(idVideo) {
     const q = 'SELECT * FROM video v WHERE v.idvideo = $1;';
     return db.query(q, [idVideo])

@@ -14,6 +14,7 @@ const Student = {
       });
   },
 
+
   /**
    * Return the student prototype if name match, undefined instead.
    * @param {String} firsname of the student
