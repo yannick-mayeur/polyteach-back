@@ -1,0 +1,12 @@
+{
+	"name":"AWI",
+	"picture":"https://icon-library.net/images/placeholder-image-icon/placeholder-image-icon-7.jpg",
+	"description":"Web Applications & Interoperability",
+	"videos": [
+		{
+			"titleVideo":"SMALL VIDEO.mov",
+			"videoURL":"https://storage.googleapis.com/polyteachpocvideos-bucket/SMALLVIDEO.mov",
+			"vttURL":"https://storage.googleapis.com/polyteachpocvideos-bucket/SMALLVIDEO-SUB.vtt"
+		}
+	]
+}

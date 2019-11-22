@@ -3,23 +3,17 @@ module.exports = class Student {
     this.id = idstudent;
     this.email = emailstudent;
     this.role = rolestudent;
-    this.firstName = firstnamestudent;
-    this.lastName = lastnamestudent;
+    this.firstname = firstnamestudent;
+    this.lastname = lastnamestudent;
     this.class = classstudent;
   }
 
   static dbToStudent(obj) {
-    const course = new Student(obj.idstudent, obj.emailstudent, obj.rolestudent, obj.firstnamestudent, obj.lastnamestudent, obj.classstudent);
-    return course;
+    return new Student(obj.idstudent, obj.emailstudent, obj.rolestudent, obj.firstnamestudent, obj.lastnamestudent, obj['class-student']);
   }
 
   static dbToStudents(tabObjs) {
-    let tabStudents = [];
-    tabObjs.forEach(obj => {
-      tabStudents.push(this.dbToStudent(obj));
-    });
-    return tabStudents;
+    return tabObjs.map(_ => this.dbToStudent(_));
   }
-
 };
 

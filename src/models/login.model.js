@@ -2,8 +2,8 @@ const db = require('../db');
 const P = require('../prototypes');
 
 // Token
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const SToken = require('../services/token.service');
 
 const login = {
   /**
@@ -33,7 +33,7 @@ const login = {
         if (rows.length > 0) {
           const teacher = P.Teacher.dbToTeacher(rows[0]);
           if (bcrypt.compareSync(password, rows[0].passwordteacher)) {
-            const token = this.generateToken(teacher.id);
+            const token = SToken.generateToken(teacher.firstname, teacher.lastName, 'teacher', 'IG');
             return { user: teacher, token: token };
           }
 
@@ -55,7 +55,7 @@ const login = {
           if (email.endsWith('@etu.umontpellier.fr')) {
             const student = P.Student.dbToStudent(rows[0]);
             if (bcrypt.compareSync(password, rows[0].passwordstudent)) {
-              const token = this.generateToken(student.id);
+              const token = SToken.generateToken(student.firstname, student.lastName, 'student', student.class);
               return { user: student, token: token };
             }
           }
@@ -77,13 +77,11 @@ const login = {
       });
   },
 
-  async signupStudent(email, password, firstName, lastName, classStudent) {
+  async signupStudent(email, firstname, lastName, classStudent) {
 
     const query = 'INSERT INTO student values(DEFAULT, $1, $2, $3, $4, $5, $6) RETURNING *';
 
-    // hash password
-    const passwordEncrypted = this.encryptPassword(password);
-    return db.query(query, [email, passwordEncrypted, 0, firstName, lastName, classStudent])
+    return db.query(query, [email, 'password', 0, firstname, lastName, classStudent])
       .then(({ rows }) => {
         return P.Student.dbToStudent(rows[0]);
       })
@@ -93,12 +91,10 @@ const login = {
       });
   },
 
-  async signupTeacher(email, password, firstName, lastName) {
+  async signupTeacher(email, firstname, lastName) {
     const query = 'INSERT INTO teacher values(DEFAULT, $1, $2, $3, $4, $5) RETURNING *';
 
-    // hash password
-    const passwordEncrypted = this.encryptPassword(password);
-    return db.query(query, [email, passwordEncrypted, 1, firstName, lastName])
+    return db.query(query, [email, 'password', 1, firstname, lastName])
       .then(({ rows }) => {
         return P.Teacher.dbToTeacher(rows[0]);
       })
@@ -107,26 +103,6 @@ const login = {
         throw new Error('error login.model signupTeacher');
       });
   },
-  async isTokenValid(token) {
-    return jwt.verify(token, process.env.SESSION_SECRET, (err) => {
-      return err == undefined;
-    });
-  },
-  generateToken(id) {
-    return jwt.sign({ id }, process.env.SESSION_SECRET, {
-      expiresIn: 86400, // expires in 24 hours
-    });
-  },
-
-  encryptPassword(password) {
-    var salt = bcrypt.genSaltSync(10);
-    var hash = bcrypt.hashSync(password, salt);
-    return hash;
-  }
 };
-
-
-
-
 
 module.exports = login;

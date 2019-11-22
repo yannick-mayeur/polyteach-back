@@ -4,3 +4,5 @@ lib/
 .travis/travis.pub
 .env
 src/.env
+src/logs/*.log
+logs/

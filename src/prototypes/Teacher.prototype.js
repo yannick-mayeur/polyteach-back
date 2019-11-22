@@ -3,22 +3,16 @@ module.exports = class Teacher {
     this.id = idteacher;
     this.email = emailteacher;
     this.role = roleteacher;
-    this.firstName = firstnameteacher;
-    this.lastName = lastnameteacher;
+    this.firstname = firstnameteacher;
+    this.lastname = lastnameteacher;
   }
 
   static dbToTeacher(obj) {
-    const course = new Teacher(obj.idteacher, obj.emailteacher, obj.roleteacher, obj.firstnameteacher, obj.lastnameteacher);
-    return course;
+    return new Teacher(obj.idteacher, obj.emailteacher, obj.roleteacher, obj.firstnameteacher, obj.lastnameteacher);
   }
 
   static dbToTeachers(tabObjs) {
-    let tabTeachers = [];
-    tabObjs.forEach(obj => {
-      tabTeachers.push(this.dbToTeacher(obj));
-    });
-    return tabTeachers;
+    return tabObjs.map(_ => this.dbToTeacher(_));
   }
-
 };
 
