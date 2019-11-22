@@ -37,7 +37,7 @@ module.exports = (router) => {
           logger.log('error', 'POST /courses failed', err);
           res.sendStatus(500);
         });
-    }else{
+    } else {
       logger.log('warning', 'Not a teacher trying to POST /courses');
       res.statusMessage = 'You have to be a teacher to create a course.';
       res.sendStatus(403);
@@ -156,23 +156,23 @@ module.exports = (router) => {
   });
 
   router.get('/course/allInfosById/:idCourse', async (req, res) => {
-    
-    M.Course.getAllInfosById(req.params.idCourse).then( (course) => {
+
+    M.Course.getAllInfosById(req.params.idCourse).then((course) => {
       res.status(200).send(course);
     })
-    .catch( err => {
-      res.statusMessage = err;
-      res.status(500).send();
-    });
-  })
+      .catch(err => {
+        res.statusMessage = err;
+        res.status(500).send();
+      });
+  });
 
   router.put('/course/updateCourse', async (req, res) => {
-    M.Course.updateCourse(req.body).then( () => {
+    M.Course.updateCourse(req.body).then(() => {
       res.status(200).send();
     })
-    .catch( err => {
-      res.statusMessage = err;
-      res.status(500).send();
-    });
-  })
+      .catch(err => {
+        res.statusMessage = err;
+        res.status(500).send();
+      });
+  });
 };

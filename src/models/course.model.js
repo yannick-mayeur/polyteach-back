@@ -32,22 +32,22 @@ const Course = {
     return db.query(q, [idCourse])
       .then(async ({ rows }) => {
         if (rows.length > 0) {
-          
+
           // extract all students from the request
           const course = P.Course.dbToCourse(rows[0]);
           const students = rows.map(row => {
             if (row.idstudent != null) {
               return P.Student.dbToStudent(row);
             } else {
-              return []
+              return [];
             }
-            
+
           });
 
 
           // Fetch videos in this course
           const videos = await MVideo.getAllVideosByCourse(course.id);
-          
+
           course.students = students;
           course.videos = videos;
 
@@ -66,52 +66,36 @@ const Course = {
    * @param {FORM NO CONFORME} course 
    */
   async updateCourse(course) {
-    console.log(course)
-    const q = `UPDATE course set namecourse = $1, picturecourse = $2, descriptioncourse = $3 where idcourse=$4;`;
+    const q = 'UPDATE course set namecourse = $1, picturecourse = $2, descriptioncourse = $3 where idcourse=$4;';
     return db.query(q, [course.name, course.picture, course.description, course.id])
-    .then(async ({ rows }) => {
+      .then(async ({ rows }) => {
 
-      // Course updated !
+        // Course updated !
 
-      // go update the possescourse
-      // First, delete all, after add all
-      await MPossescourse.deleteFromCourse(course.id);
-      await Promise.all(course.students.selectedStudents.map(student => {
-        return new Promise(function (resolve) {
-          return MPossescourse.addPosses(student.id, course.id, false).then(resolve())
-        });
-      }));
+        // go update the possescourse
+        // First, delete all, after add all
+        await MPossescourse.deleteFromCourse(course.id);
+        await Promise.all(course.students.selectedStudents.map(student => {
+          return new Promise(function (resolve) {
+            return MPossescourse.addPosses(student.id, course.id, false).then(resolve());
+          });
+        }));
 
-      // UPDATE videos
-      // Fetch all, compare changes, delete all and add the videos
-      await MVideo.deleteFromCourse(course.id);
-      await Promise.all(course.videos.map(video => {
-        return new Promise(function (resolve) {
-          video.title = video.title
-          video.fk_course = course.id
-          console.log(video);
-          return MVideo.create(video).then(resolve())
-        });
-      }));
-
-
-      return rows;
-    })
-    .catch(err => {
-      console.log(err);
-      throw new Error('Error course.model update Course');
-    });
-  },
-
-  async get() {
-    const q = ``;
-    return db.query(q, [])
-      .then(({ rows }) => {
+        // UPDATE videos
+        // Fetch all, compare changes, delete all and add the videos
+        await MVideo.deleteFromCourse(course.id);
+        await Promise.all(course.videos.map(video => {
+          return new Promise(function (resolve) {
+            video.fk_course = course.id;
+            console.log(video);
+            return MVideo.create(video).then(resolve());
+          });
+        }));
         return rows;
       })
       .catch(err => {
         console.log(err);
-        throw new Error('');
+        throw new Error('Error course.model update Course');
       });
   },
 
