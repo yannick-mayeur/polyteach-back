@@ -13,8 +13,40 @@ You can find the related projects at:
 * Docker
 * docker-compose
 
+
 ## Steps to use
 
+### Set up env
+
+Before launching the project there are several variables you have to set up:
+
+Locally this can be done with dotenv.
+
+```
+PGHOST // Host of database
+PGPORT // Port of database
+PGDATABASE // Database name
+PGUSER // Username for database
+PGPASSWORD // Password for database
+DD_API_KEY // Only for production
+SESSION_SECRET // secret for OAuth
+OPENVIDU_URL // Url for the openvidu-kms-server
+NODE_ENV // production, development, staging
+```
+
+For local dev the basic setup is:
+
+```
+PGHOST='db'
+PGUSER='admin'
+PGDATABASE='polyteach-db'
+PGPASSWORD='foobar'
+PGPORT=5432
+SESSION_SECRET='' // ADD OAuth secret
+```
+
+
+### Launch the project
 ```
 $ git clone https://github.com/yannick-mayeur/polyteach-front
 $ cd polyteach-front
