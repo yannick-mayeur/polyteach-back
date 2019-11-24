@@ -16,7 +16,7 @@ const Course = {
       });
   },
 
-  async getCourse(courseId) {
+  async getCourse(courseId, user) {
     logger.info('Course.getCourse called', courseId);
     const query = 'SELECT C.idcourse, C.namecourse, T.firstnameteacher, T.lastnameteacher FROM Course C, Teacher T WHERE C."idteacher-course" = T.idteacher AND C.idcourse = $1;';
     const values = [courseId];
@@ -32,7 +32,11 @@ const Course = {
       throw new Error('Could not fetch course');
     }
     try {
-      videos = await Video.getAllVideosByCourse(course.idcourse);
+      if (user.role === 0) {
+        videos = await Video.getAllVideosByCourseStudent(course.idcourse, user.id);
+      } else {
+        videos = await Video.getAllVideosByCourseTeacher(course.idcourse);
+      }
     } catch(e) {
       logger.log('error', 'error course.getCourse: could not fetch videos', e);
       throw new Error('Could not fetch course videos');
