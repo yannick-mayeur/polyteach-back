@@ -50,7 +50,7 @@ const Course = {
     const query = `SELECT * FROM course C
     INNER JOIN possescourse P ON C.idcourse = P."idcourse-possescourse"
     INNER JOIN student S ON S.idstudent = P."iduser-possescourse"
-    LEFT JOIN ratingcourse R ON C.idcourse = R."idcourse-ratingcourse"
+    LEFT JOIN ratingcourse R ON C.idcourse = R."idcourse-ratingcourse" AND S.idstudent = R."iduser-ratingcourse"
     INNER JOIN teacher T ON T.idteacher = C."idteacher-course"
     where S.idstudent = $1;`;
     const values = [userId];
