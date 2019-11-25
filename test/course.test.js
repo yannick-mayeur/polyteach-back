@@ -8,7 +8,7 @@ const Video = require('../src/models/video.model');
 const Possescourse = require('../src/models/possescourse.model');
 const VideoPrototype = require('../src/prototypes/Video.prototype');
 const CoursePrototype = require('../src/prototypes/Course.prototype');
-const {getAllVideosByCourse} = jest.requireActual('../src/models/video.model');
+const {getAllVideosByCourseTeacher} = jest.requireActual('../src/models/video.model');
 
 test('should fetch courses', () => {
   const courses = {
@@ -72,7 +72,7 @@ test('should get video for a specific course', () => {
   const videos = {idvideo: 2, titlevideo: 'some video', hashserver: 'url', hashvtt: 'vttURL', 'idchapter-video': 1};
   const result = new VideoPrototype(2, 'some video', 'url', 'vttURL', 1);
   pg.query.mockImplementation(() => Promise.resolve({rows: [videos]}));
-  getAllVideosByCourse(1).then(data => expect(data).toEqual([result]));
+  getAllVideosByCourseTeacher(1).then(data => expect(data).toEqual([result]));
 });
 
 test('should add students to possescourse', async () => {

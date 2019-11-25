@@ -16,7 +16,7 @@ const Course = {
       });
   },
 
-  async getCourse(courseId) {
+  async getCourse(courseId, user) {
     logger.info('Course.getCourse called', courseId);
     const query = 'SELECT C.idcourse, C.namecourse, T.firstnameteacher, T.lastnameteacher FROM Course C, Teacher T WHERE C."idteacher-course" = T.idteacher AND C.idcourse = $1;';
     const values = [courseId];
@@ -32,7 +32,11 @@ const Course = {
       throw new Error('Could not fetch course');
     }
     try {
-      videos = await Video.getAllVideosByCourse(course.idcourse);
+      if (user.role === 0) {
+        videos = await Video.getAllVideosByCourseStudent(course.idcourse, user.id);
+      } else {
+        videos = await Video.getAllVideosByCourseTeacher(course.idcourse);
+      }
     } catch(e) {
       logger.log('error', 'error course.getCourse: could not fetch videos', e);
       throw new Error('Could not fetch course videos');
@@ -50,7 +54,7 @@ const Course = {
     const query = `SELECT * FROM course C
     INNER JOIN possescourse P ON C.idcourse = P."idcourse-possescourse"
     INNER JOIN student S ON S.idstudent = P."iduser-possescourse"
-    LEFT JOIN ratingcourse R ON C.idcourse = R."idcourse-ratingcourse"
+    LEFT JOIN ratingcourse R ON C.idcourse = R."idcourse-ratingcourse" AND S.idstudent = R."iduser-ratingcourse"
     INNER JOIN teacher T ON T.idteacher = C."idteacher-course"
     where S.idstudent = $1;`;
     const values = [userId];

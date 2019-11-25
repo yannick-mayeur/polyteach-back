@@ -56,9 +56,9 @@ module.exports = (router) => {
       });
   });
 
-  router.get('/courses/:idCourse', async (req, res) => {
-    logger.log('info', 'received request: GET /courses/:idCourse/videos\nparams:', req.params);
-    M.Course.getCourse(req.params.idCourse).then((course) => {
+  router.get('/courses/:idCourse', login, async (req, res) => {
+    logger.log('info', 'received request: GET /courses/:idCourse\nparams:', req.params);
+    M.Course.getCourse(req.params.idCourse, req.user).then((course) => {
       res.status(200).send(course);
     })
       .catch(err => {
@@ -70,14 +70,25 @@ module.exports = (router) => {
 
   router.get('/courses/:idCourse/videos', login, async (req, res) => {
     logger.log('info', 'received request: GET /courses/:idCourse/videos\nparams:', req.params);
-    M.Video.getAllVideosByCourse(req.params.idCourse).then((videosByCourse) => {
-      res.status(200).send(videosByCourse);
-    })
-      .catch(err => {
-        logger.log('error', 'GET /courses/:idCourse/videos failed', err);
-        res.statusMessage = err;
-        res.status(500).send();
-      });
+    if (req.user.role === 0) {
+      M.Video.getAllVideosByCourseStudent(req.params.idCourse, req.user.id).then((videosByCourse) => {
+        res.status(200).send(videosByCourse);
+      })
+        .catch(err => {
+          logger.log('error', 'GET /courses/:idCourse/videos failed', err);
+          res.statusMessage = err;
+          res.status(500).send();
+        });
+    } else {
+      M.Video.getAllVideosByCourseTeacher(req.params.idCourse).then((videosByCourse) => {
+        res.status(200).send(videosByCourse);
+      })
+        .catch(err => {
+          logger.log('error', 'GET /courses/:idCourse/videos failed', err);
+          res.statusMessage = err;
+          res.status(500).send();
+        });
+    }
   });
 
   router.get('/courses/:idCourse/ratingcourse', login, async (req, res) => {
