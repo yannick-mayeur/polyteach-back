@@ -39,11 +39,11 @@ const Video = {
     }
   },
 
-  async getAllVideosByCourse(idCourse) {
+  async getAllVideosByCourseStudent(idCourse, idUser) {
     const q = `SELECT * FROM video v 
-    LEFT JOIN ratingvideo R ON R."idvideo-ratingvideo" = v.idvideo
+    LEFT JOIN ratingvideo R ON R."idvideo-ratingvideo" = v.idvideo AND "iduser-ratingvideo" = $2
     WHERE v."idcourse-video" = $1;`;
-    return db.query(q, [idCourse])
+    return db.query(q, [idCourse, idUser])
       .then(async ({ rows }) => {
 
         return await Promise.all(rows.map(row => {
@@ -56,13 +56,34 @@ const Video = {
             });
           })
             .catch((e) => {
-              logger.log('error', 'Video.getAllVideosByCourse', e);
-              throw new Error('error video getAllVideosByCourse');
+              logger.log('error', 'Video.getAllVideosByCourseStudent', e);
+              throw new Error('error video getAllVideosByCourseStudent');
             });
         }));
       });
   },
 
+  async getAllVideosByCourseTeacher(idCourse) {
+    const q = `SELECT * FROM video v 
+    WHERE v."idcourse-video" = $1;`;
+    return db.query(q, [idCourse])
+      .then(async ({ rows }) => {
+
+        return await Promise.all(rows.map(row => {
+          return new Promise(resolve => {
+            const video = P.Video.dbToVideo(row);
+            this.getAverageRating(video.id).then(rate => {
+              video.averageRating = rate;
+              resolve(video);
+            });
+          })
+            .catch((e) => {
+              logger.log('error', 'Video.getAllVideosByCourseTeacher', e);
+              throw new Error('error video getAllVideosByCourseTeacher');
+            });
+        }));
+      });
+  },
   async getAverageRating(idVideo) {
     const q = 'SELECT * FROM ratingvideo WHERE "idvideo-ratingvideo" = $1';
     return db.query(q, [idVideo])

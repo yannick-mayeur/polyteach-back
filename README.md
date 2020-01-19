@@ -42,7 +42,8 @@ PGUSER='admin'
 PGDATABASE='polyteach-db'
 PGPASSWORD='foobar'
 PGPORT=5432
-SESSION_SECRET='' // ADD OAuth secret
+SESSION_SECRET='VLRS2ETbWgEU4fJv'
+
 ```
 
 
