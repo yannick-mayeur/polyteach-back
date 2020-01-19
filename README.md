@@ -43,6 +43,7 @@ PGDATABASE='polyteach-db'
 PGPASSWORD='foobar'
 PGPORT=5432
 SESSION_SECRET='VLRS2ETbWgEU4fJv'
+
 ```
 
 
