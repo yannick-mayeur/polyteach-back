@@ -25,7 +25,7 @@
     "connect-datadog": "0.0.9",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "i": "^0.3.6",
     "jsonwebtoken": "^8.5.1",
     "openvidu-node-client": "^2.11.0",
